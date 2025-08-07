@@ -14,7 +14,7 @@
     .top-controls {
       display: flex;
       flex-wrap: nowrap;
-      justify-content: space-between; 
+      justify-content: space-between; /* равномерно распределяем */
       gap: 8px;
       max-width: 900px;
       margin: 0 auto 20px;
@@ -289,6 +289,95 @@
     #pageNumbers button.active {
       background-color: #1f2937;
     }
+
+    /* Стили для модального окна добавления детали */
+    .add-part-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .add-part-container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .add-part-header {
+      background-color: #1a2f40;
+      padding: 16px;
+      border-radius: 8px 8px 0 0;
+      text-align: center;
+      margin: -30px -30px 20px -30px;
+    }
+
+    .add-part-header h2 {
+      font-size: 2rem;
+      color: white;
+    }
+
+    .add-part-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .add-part-form label {
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .add-part-form input[type="text"],
+    .add-part-form input[type="number"],
+    .add-part-form input[type="file"] {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .add-part-form input:focus {
+      border-color: #dc143c;
+    }
+
+    .add-part-form button {
+      margin-top: 10px;
+      padding: 12px;
+      background-color: #dc143c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .add-part-form button:hover {
+      background-color: #b0102f;
+    }
+
+    .close-add-part {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -302,7 +391,7 @@
   <button id="btnSearch" class="btn-top">Поиск</button>
   <button onclick="resetSearch()" class="btn-top">Сбросить</button>
   <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top">Мануалы</button>
-  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top">Добавить деталь</button>
+  <button id="btnAddPart" class="btn-top">Добавить деталь</button>
 </div>
 
 <div class="cards" id="cardsContainer"></div>
@@ -321,6 +410,28 @@
   </div>
 </div>
 
+<!-- Модальное окно для добавления детали -->
+<div id="addPartModal" class="add-part-modal">
+  <div class="add-part-container">
+    <div class="add-part-header">
+      <h2>Добавить деталь</h2>
+      <div class="close-add-part" id="closeAddPart">×</div>
+    </div>
+    <form id="addPartForm" class="add-part-form">
+      <label for="partNumber">Номер детали:</label>
+      <input type="text" id="partNumber" placeholder="000-000-000" required>
+      
+      <label for="partQuantity">Количество:</label>
+      <input type="number" id="partQuantity" min="1" value="1" required>
+      
+      <label for="partPhoto">Фото детали:</label>
+      <input type="file" id="partPhoto" accept="image/*" required>
+      
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+</div>
+
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbwDFdI2_vDDZimwXZKBpKRCRfbhGwiYCu6tFysONDptMt4xMJd73VXGQS-uf8LGqDOYZg/exec"; // Замените на актуальный URL скрипта Apps Script
 
@@ -328,6 +439,27 @@
   let currentEntries = [];
   let currentPage = 1;
   const cardsPerPage = 5;
+
+  // Инициализация при загрузке страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    // Обработчики для модального окна добавления детали
+    document.getElementById('btnAddPart').addEventListener('click', function() {
+      document.getElementById('addPartModal').style.display = 'flex';
+    });
+    
+    document.getElementById('closeAddPart').addEventListener('click', function() {
+      document.getElementById('addPartModal').style.display = 'none';
+    });
+    
+    // Обработчик отправки формы добавления детали
+    document.getElementById('addPartForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      addNewPart();
+    });
+    
+    // Загрузка данных
+    loadEntries();
+  });
 
   async function getEntries() {
     const res = await fetch(`${API_URL}?action=getEntries`);
@@ -357,6 +489,58 @@
   async function getMostPopularEntries() {
     const res = await fetch(`${API_URL}?action=getMostPopularEntries`);
     return await res.json();
+  }
+
+  async function addNewPart() {
+    const partNumber = document.getElementById('partNumber').value.trim();
+    const quantity = document.getElementById('partQuantity').value;
+    const fileInput = document.getElementById('partPhoto');
+    
+    if (!partNumber || !quantity || fileInput.files.length === 0) {
+      alert('Заполните все поля и выберите фото.');
+      return;
+    }
+    
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = async function(evt) {
+      const dataUrl = evt.target.result;
+      const parts = dataUrl.split(',');
+      const mimeType = parts[0].match(/data:(.*);base64/)[1];
+      const base64 = parts[1];
+      
+      try {
+        const response = await fetch(`${API_URL}?action=addPart`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            partNumber: partNumber,
+            quantity: quantity,
+            mimeType: mimeType,
+            base64: base64,
+            fileName: file.name
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          alert('Деталь успешно добавлена!');
+          document.getElementById('addPartForm').reset();
+          document.getElementById('addPartModal').style.display = 'none';
+          loadEntries(); // Обновляем список деталей
+        } else {
+          alert('Ошибка: ' + result.message);
+        }
+      } catch (error) {
+        alert('Ошибка при отправке данных: ' + error.message);
+      }
+    };
+    
+    reader.readAsDataURL(file);
   }
 
   function createCard(entry) {
@@ -572,8 +756,6 @@
   document.getElementById('modalClose').onclick = () => {
     document.getElementById('modalOverlay').style.display = 'none';
   };
-
-  loadEntries();
 </script>
 </body>
 </html>
