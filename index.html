@@ -369,31 +369,33 @@
     media.className = 'media-block';
 
 if (entry.fileUrl) {
+    console.log("Обработка URL:", entry.fileUrl); // Отладка
+    
     if (entry.fileUrl.includes('/preview')) {
-        // Google Drive preview
+        // Google Drive preview (оставляем iframe)
         const iframe = document.createElement('iframe');
         iframe.src = entry.fileUrl;
         media.appendChild(iframe);
-    } else if (entry.fileUrl.includes('ibb.co')) {
-        // Обработка ImgBB ссылок
-        let imgUrl;
-        
-        if (entry.fileUrl.includes('i.ibb.co')) {
-            // Уже прямая ссылка (https://i.ibb.co/...)
-            imgUrl = entry.fileUrl;
-        } else {
-            // Короткая ссылка (https://ibb.co/...) - преобразуем
-            imgUrl = entry.fileUrl.replace('ibb.co', 'i.ibb.co') + '.jpg';
-        }
-        
+    } 
+    else if (entry.fileUrl.includes('ibb.co')) {
+        // Вариант 1: Прямая вставка через <img> (если CORS разрешён)
         const img = document.createElement('img');
-        img.src = imgUrl;
+        img.src = entry.fileUrl.includes('i.ibb.co') 
+            ? entry.fileUrl 
+            : entry.fileUrl.replace('ibb.co', 'i.ibb.co') + '.jpg';
+        
         img.onerror = function() {
-            this.src = 'https://via.placeholder.com/400x300?text=Image+not+found';
+            // Вариант 2: Если не загрузилось — пробуем iframe
+            console.log("Не удалось загрузить изображение, пробуем iframe...");
+            const iframe = document.createElement('iframe');
+            iframe.src = entry.fileUrl;
+            media.innerHTML = ''; // Очищаем media
+            media.appendChild(iframe);
         };
         media.appendChild(img);
-    } else {
-        // Любая другая ссылка на изображение
+    } 
+    else {
+        // Любые другие ссылки (просто вставляем как изображение)
         const img = document.createElement('img');
         img.src = entry.fileUrl;
         media.appendChild(img);
