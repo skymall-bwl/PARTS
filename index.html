@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>ДЕТАЛИ SKYMALL</title>
+  <!-- Добавляем Font Awesome для иконок -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -42,6 +44,7 @@
       padding: 0 16px;
       transition: background-color 0.3s ease, opacity 0.3s ease;
       box-sizing: border-box;
+      gap: 8px;
     }
 
     .top-controls select.btn-top {
@@ -186,6 +189,9 @@
       font-weight: bold;
       cursor: pointer;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-add {
@@ -198,6 +204,7 @@
       background: #fff;
       color: #000;
       min-width: 60px;
+      justify-content: center;
     }
 
     .btn-take {
@@ -269,6 +276,9 @@
       padding: 15px 20px;
       font-size: 20px; 
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .pagination button:disabled {
@@ -299,18 +309,18 @@
     <option value="mostPopular">Популярные</option>
     <option value="sortByQty">Остатки</option>
   </select>
-  <button id="btnSearch" class="btn-top">Поиск</button>
-  <button onclick="resetSearch()" class="btn-top">Сбросить</button>
-  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top">Мануалы</button>
-  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top">Добавить деталь</button>
+  <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
+  <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
+  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
+  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
 </div>
 
 <div class="cards" id="cardsContainer"></div>
 
 <div class="pagination">
-  <button onclick="prevPage()" id="prevBtn" disabled>← Назад</button>
+  <button onclick="prevPage()" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
   <div id="pageNumbers" style="display: flex; gap: 10px;"></div>
-  <button onclick="nextPage()" id="nextBtn">Вперёд →</button>
+  <button onclick="nextPage()" id="nextBtn">Вперёд <i class="fas fa-arrow-right"></i></button>
 </div>
 
 <div id="modalOverlay" class="modal-overlay">
@@ -403,15 +413,15 @@
 
     const btnAdd = document.createElement('button');
     btnAdd.className = 'btn btn-add';
-    btnAdd.textContent = 'ДОБАВИТЬ';
+    btnAdd.innerHTML = '<i class="fas fa-plus"></i> ДОБАВИТЬ';
 
     const btnInfo = document.createElement('button');
     btnInfo.className = 'btn btn-info';
-    btnInfo.textContent = 'ИСТОРИЯ';
+    btnInfo.innerHTML = '<i class="fas fa-history"></i>';
 
     const btnTake = document.createElement('button');
     btnTake.className = 'btn btn-take';
-    btnTake.textContent = 'ВЗЯТЬ';
+    btnTake.innerHTML = '<i class="fas fa-minus"></i> ВЗЯТЬ';
 
     controls.append(pill, qtyInput, btnAdd, btnInfo, btnTake);
     div.append(controls);
