@@ -497,23 +497,26 @@
     
     // Валидация
     if (!partNumber) throw new Error('Введите номер детали');
-    if (isNaN(quantity) || quantity < 1) throw new Error('Введите корректное количество');
+    if (isNaN(quantity) throw new Error('Введите корректное количество');
     if (fileInput.files.length === 0) throw new Error('Выберите фото детали');
     
     const file = fileInput.files[0];
     if (file.size > 5 * 1024 * 1024) throw new Error('Размер файла не должен превышать 5MB');
 
     // Подготовка данных
-    const dataUrl = await readFileAsDataURL(file);
-    const [mimeType, base64] = processDataUrl(dataUrl);
-
+    const base64Image = await readFileAsDataURL(file);
+    
     // Отправка данных
-    const response = await sendDataToServer({
-      partNumber,
-      quantity,
-      mimeType,
-      base64,
-      fileName: file.name
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        partNumber: partNumber,
+        quantity: quantity,
+        image: base64Image
+      })
     });
 
     if (!response.ok) {
@@ -539,24 +542,6 @@
       reader.onload = () => resolve(reader.result);
       reader.onerror = () => reject(new Error('Ошибка чтения файла'));
       reader.readAsDataURL(file);
-    });
-  }
-
-  function processDataUrl(dataUrl) {
-    const parts = dataUrl.split(',');
-    const mimeType = parts[0].match(/data:(.*);base64/)[1];
-    const base64 = parts[1];
-    return [mimeType, base64];
-  }
-
-  async function sendDataToServer(data) {
-    console.log('Отправка данных:', data);
-    return await fetch(`${API_URL}?action=addPart`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
     });
   }
 
