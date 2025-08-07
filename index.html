@@ -13,7 +13,7 @@
 
     body {
       margin: 0;
-      padding: 15px;
+      padding: 12px;
       background: #f0f2f5;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #333;
@@ -24,120 +24,69 @@
       margin: 0 auto;
     }
 
+    /* ВЕРХНИЕ КОНТРОЛЫ - ПЕРЕРАБОТАННЫЕ */
     .top-controls {
-      display: flex;
-      flex-wrap: nowrap; /* Важно - всегда в одну строку */
-      gap: 12px;
-      margin: 0 auto 25px;
-      padding: 0 0 15px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 0 auto 20px;
+      padding-bottom: 12px;
       border-bottom: 1px solid rgba(0,0,0,0.1);
-      overflow-x: auto; /* Горизонтальная прокрутка */
-      scrollbar-width: thin;
-      scrollbar-color: #1a2f40 #e0e5eb;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Стили для скроллбара */
-    .top-controls::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .top-controls::-webkit-scrollbar-track {
-      background: #e0e5eb;
-      border-radius: 3px;
-    }
-
-    .top-controls::-webkit-scrollbar-thumb {
-      background: #1a2f40;
-      border-radius: 3px;
     }
 
     .btn-top {
-      height: 60px;
-      font-size: 16px;
-      border-radius: 16px;
+      height: 48px;
+      font-size: 13px;
+      border-radius: 12px;
       border: none;
       cursor: pointer;
-      white-space: nowrap;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       font-family: inherit;
-      padding: 0 25px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      min-width: 140px;
-      position: relative;
+      padding: 0 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background-color: #1a2f40;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
       overflow: hidden;
-      flex-shrink: 0; /* Предотвращает сжатие кнопок */
+      text-overflow: ellipsis;
     }
 
     .btn-top:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-    }
-
-    .btn-top:active {
-      transform: translateY(1px);
+      opacity: 0.9;
+      transform: translateY(-1px);
     }
 
     .btn-top i {
-      margin-right: 10px;
-      font-size: 18px;
+      margin-right: 6px;
+      font-size: 14px;
     }
 
     .top-controls select.btn-top {
       background-color: #dc143c;
-      color: #fff;
       appearance: none;
-      padding-right: 50px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+      padding-right: 30px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 20px center;
-      background-size: 16px;
-    }
-
-    .top-controls button.btn-top {
-      background-color: #1a2f40;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-top::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.1);
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-    }
-
-    .btn-top:hover::after {
-      transform: translateX(0);
+      background-position: right 10px center;
+      background-size: 12px;
     }
 
     .cards {
       display: flex;
       flex-direction: column;
-      gap: 25px;
+      gap: 20px;
     }
 
     .card {
       width: 100%;
       background: #fff;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
 
     .media-block {
@@ -145,9 +94,9 @@
       width: 100%;
       padding-top: 65%;
       background: #000;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     .media-block img,
@@ -174,23 +123,23 @@
 
     .media-block .icon {
       position: absolute;
-      width: 48px;
-      height: 48px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #dc143c;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 18px;
       color: #fff;
       z-index: 2;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     .remove {
-      top: 15px;
-      right: 15px;
+      top: 12px;
+      right: 12px;
     }
 
     .controls {
@@ -198,55 +147,55 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      margin-top: 20px;
-      gap: 15px;
-      padding: 15px 0 5px;
+      margin-top: 16px;
+      gap: 10px;
+      padding: 12px 0 4px;
     }
 
     .pill {
       background: #1a2f40;
       color: white;
-      border-radius: 25px;
-      padding: 16px 25px;
-      font-size: 20px;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
       font-weight: bold;
       flex-shrink: 0;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     .controls input {
-      width: 80px;
-      height: 65px;
-      padding: 0 12px;
+      width: 70px;
+      height: 55px;
+      padding: 0 10px;
       border: 2px solid #e0e5eb;
-      border-radius: 18px;
+      border-radius: 14px;
       text-align: center;
       background: #fff;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
       flex-shrink: 0;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .btn {
-      height: 65px;
-      padding: 0 30px;
+      height: 55px;
+      padding: 0 20px;
       border: none;
-      border-radius: 18px;
-      font-size: 20px;
+      border-radius: 14px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     .btn:active {
@@ -256,20 +205,20 @@
     .btn-add {
       background: #1f2937;
       color: #fff;
-      min-width: 160px;
+      min-width: 120px;
     }
 
     .btn-info {
       background: #fff;
       color: #1a2f40;
-      min-width: 160px;
+      min-width: 120px;
       border: 2px solid #1a2f40;
     }
 
     .btn-take {
       background: #dc143c;
       color: #fff;
-      min-width: 160px;
+      min-width: 120px;
     }
 
     .modal-overlay {
@@ -283,32 +232,32 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(3px);
     }
 
     .modal {
       position: relative;
       background: #fff;
-      border-radius: 20px;
-      padding: 40px;
-      width: 85vw;
-      max-width: 800px;
+      border-radius: 16px;
+      padding: 30px;
+      width: 90vw;
+      max-width: 700px;
       max-height: 80vh;
       overflow: auto;
       z-index: 10000;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
 
     .modal-close {
       position: absolute;
-      top: 20px;
-      right: 25px;
+      top: 15px;
+      right: 20px;
       cursor: pointer;
-      font-size: 40px;
+      font-size: 30px;
       font-weight: bold;
       color: #dc143c;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -321,20 +270,20 @@
 
     .modal h3 {
       margin-top: 0;
-      font-size: 28px;
+      font-size: 22px;
       color: #1a2f40;
-      padding-bottom: 15px;
+      padding-bottom: 12px;
       border-bottom: 2px solid #e0e5eb;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .modal pre {
       white-space: pre-wrap;
-      font-size: 18px;
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 1.5;
       background: #f9fafb;
-      padding: 25px;
-      border-radius: 12px;
+      padding: 20px;
+      border-radius: 10px;
       font-family: 'Courier New', monospace;
     }
 
@@ -342,30 +291,30 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 40px 0 20px;
-      gap: 15px;
+      margin: 30px 0 15px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .pagination-btn {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       background-color: #1a2f40;
       color: white;
       font-weight: 700;
       border: none;
       border-radius: 50%;
-      font-size: 22px;
+      font-size: 18px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
 
     .pagination-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
       background: #dc143c;
     }
 
@@ -381,37 +330,37 @@
     }
 
     .page-number {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       background-color: #e0e5eb;
       color: #1a2f40;
       font-weight: 700;
       border: none;
       border-radius: 50%;
-      font-size: 20px;
+      font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
     }
 
     .page-number:hover {
       background: #cbd5e0;
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
 
     .page-number.active {
       background: #dc143c;
       color: white;
-      transform: scale(1.15);
-      box-shadow: 0 5px 15px rgba(220, 20, 60, 0.4);
+      transform: scale(1.1);
+      box-shadow: 0 3px 10px rgba(220, 20, 60, 0.3);
     }
 
     .page-numbers-container {
       display: flex;
-      gap: 12px;
-      margin: 0 10px;
+      gap: 8px;
+      margin: 0 8px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -423,30 +372,30 @@
       }
       
       .top-controls {
-        gap: 10px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
       }
       
       .btn-top {
-        height: 55px;
-        font-size: 15px;
-        min-width: 130px;
-        padding: 0 15px;
+        height: 42px;
+        font-size: 11px;
+        padding: 0 6px;
       }
       
       .btn-top i {
-        margin-right: 8px;
-        font-size: 16px;
+        margin-right: 4px;
+        font-size: 12px;
       }
       
       .top-controls select.btn-top {
-        padding-right: 40px;
-        background-position: right 15px center;
-        min-width: 180px;
+        padding-right: 25px;
+        background-position: right 8px center;
       }
       
       .controls {
         flex-direction: column;
         align-items: stretch;
+        gap: 8px;
       }
       
       .pill, .controls input, .btn {
@@ -455,65 +404,93 @@
       }
       
       .btn {
-        height: 60px;
+        height: 50px;
+        font-size: 15px;
       }
       
       .pagination-btn {
-        width: 55px;
-        height: 55px;
-        font-size: 20px;
+        width: 42px;
+        height: 42px;
+        font-size: 16px;
       }
       
       .page-number {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
       }
       
       .modal {
-        padding: 25px;
-        width: 90vw;
+        padding: 20px;
+        width: 95vw;
       }
       
       .modal h3 {
-        font-size: 24px;
+        font-size: 20px;
+      }
+      
+      .pill {
+        padding: 10px 16px;
+        font-size: 15px;
+      }
+      
+      .controls input {
+        height: 50px;
+        font-size: 18px;
       }
     }
 
     @media (max-width: 480px) {
-      .btn-top {
-        height: 50px;
-        font-size: 14px;
-        min-width: 120px;
-        padding: 0 12px;
-      }
-      
       .top-controls {
-        gap: 8px;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
       }
       
-      .page-numbers-container {
-        gap: 8px;
+      .btn-top {
+        height: 38px;
+        font-size: 10px;
+        padding: 0 4px;
       }
       
-      .page-number {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+      .btn-top i {
+        margin-right: 3px;
+        font-size: 10px;
+      }
+      
+      .top-controls select.btn-top {
+        font-size: 9.5px;
+        padding-right: 22px;
       }
       
       .pagination-btn {
-        width: 50px;
-        height: 50px;
+        width: 38px;
+        height: 38px;
+      }
+      
+      .page-number {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
       }
       
       .card {
-        padding: 15px;
+        padding: 12px;
+      }
+    }
+    
+    @media (max-width: 360px) {
+      .btn-top span {
+        display: none;
       }
       
-      .pill {
-        padding: 14px 20px;
-        font-size: 18px;
+      .btn-top i {
+        margin-right: 0;
+        font-size: 12px;
+      }
+      
+      .btn-top {
+        font-size: 0;
+        min-width: 30px;
       }
     }
   </style>
@@ -522,15 +499,15 @@
 <div class="container">
   <div class="top-controls">
     <select id="sortSelect" title="Фильтр" class="btn-top">
-      <option value="all">Все детали</option>
-      <option value="popular">Популярные (30 дн.)</option>
-      <option value="mostPopular">Самые популярные</option>
-      <option value="sortByQty">По остаткам</option>
+      <option value="all">Все</option>
+      <option value="popular">Популяр.</option>
+      <option value="mostPopular">Топ</option>
+      <option value="sortByQty">Остатки</option>
     </select>
-    <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
-    <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
-    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
-    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить</button>
+    <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> <span>Поиск</span></button>
+    <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> <span>Сбросить</span></button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> <span>Мануалы</span></button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> <span>Добавить</span></button>
   </div>
 
   <div class="cards" id="cardsContainer"></div>
@@ -551,21 +528,7 @@
 </div>
 
 <script>
-  // Проверка работоспособности API
   const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
-
-  // Проверка доступности API
-  async function checkAPI() {
-    try {
-      const response = await fetch(`${API_URL}?action=ping`);
-      if (!response.ok) throw new Error('API не отвечает');
-      return true;
-    } catch (error) {
-      console.error('Ошибка доступа к API:', error);
-      alert('Ошибка подключения к серверу. Проверьте интернет-соединение.');
-      return false;
-    }
-  }
 
   let allEntries = [];
   let currentEntries = [];
@@ -574,16 +537,8 @@
 
   async function getEntries() {
     try {
-      // Проверяем доступность API перед запросом
-      if (!(await checkAPI())) return [];
-      
       const res = await fetch(`${API_URL}?action=getEntries`);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      
-      const data = await res.json();
-      if (!Array.isArray(data)) throw new Error('Invalid data format');
-      
-      return data;
+      return await res.json();
     } catch (error) {
       console.error("Ошибка при загрузке данных:", error);
       showError("Не удалось загрузить данные. Проверьте соединение.");
@@ -646,10 +601,10 @@
   function showError(message) {
     const container = document.getElementById('cardsContainer');
     container.innerHTML = `
-      <div class="card" style="text-align: center; padding: 40px; background: #fff8f8; border: 2px solid #ffcccc;">
+      <div class="card" style="text-align: center; padding: 30px; background: #fff8f8; border: 2px solid #ffcccc;">
         <h2 style="color: #dc143c; margin: 0;"><i class="fas fa-exclamation-triangle"></i> Ошибка</h2>
-        <p style="font-size: 18px; margin-top: 20px;">${message}</p>
-        <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 24px; background: #dc143c; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+        <p style="font-size: 16px; margin-top: 15px;">${message}</p>
+        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #dc143c; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
           <i class="fas fa-redo"></i> Перезагрузить
         </button>
       </div>
@@ -675,8 +630,8 @@
       img.onerror = function() {
         this.onerror = null;
         this.parentNode.innerHTML = `
-          <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#2c3e50; color:white; font-size:20px; font-weight:bold;">
-            Ошибка загрузки изображения
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#2c3e50; color:white; font-size:16px; font-weight:bold;">
+            Ошибка загрузки
           </div>
         `;
       };
@@ -694,7 +649,7 @@
         justify-content: center;
         background: #2c3e50;
         color: white;
-        font-size: 20px;
+        font-size: 16px;
         font-weight: bold;
       `;
       placeholder.textContent = 'НЕТ ИЗОБРАЖЕНИЯ';
@@ -809,12 +764,12 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      font-size: 24px;
+      font-size: 20px;
       color: #1a2f40;
       flex-direction: column;
     `;
     loader.innerHTML = `
-      <i class="fas fa-spinner fa-spin" style="font-size: 48px; margin-bottom: 20px;"></i>
+      <i class="fas fa-spinner fa-spin" style="font-size: 40px; margin-bottom: 15px;"></i>
       <div>Загрузка данных...</div>
     `;
     document.body.appendChild(loader);
@@ -847,9 +802,9 @@
 
     if (pageData.length === 0) {
       container.innerHTML = `
-        <div class="card" style="text-align: center; padding: 40px;">
+        <div class="card" style="text-align: center; padding: 30px;">
           <h2 style="color: #dc143c; margin: 0;"><i class="fas fa-search"></i> Данные не найдены</h2>
-          <p style="font-size: 18px;">Попробуйте изменить параметры поиска</p>
+          <p style="font-size: 16px;">Попробуйте изменить параметры поиска</p>
         </div>
       `;
     } else {
@@ -884,7 +839,7 @@
     if (startPage > 2) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      dots.style = 'padding: 0 10px; color: #718096; display: flex; align-items: flex-end;';
+      dots.style = 'padding: 0 8px; color: #718096; display: flex; align-items: flex-end;';
       pageContainer.appendChild(dots);
     }
     
@@ -901,7 +856,7 @@
     if (endPage < totalPages - 1) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      dots.style = 'padding: 0 10px; color: #718096; display: flex; align-items: flex-end;';
+      dots.style = 'padding: 0 8px; color: #718096; display: flex; align-items: flex-end;';
       pageContainer.appendChild(dots);
     }
     
