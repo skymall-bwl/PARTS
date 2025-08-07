@@ -368,15 +368,37 @@
     const media = document.createElement('div');
     media.className = 'media-block';
 
-    if (entry.fileUrl && entry.fileUrl.includes('/preview')) {
-      const iframe = document.createElement('iframe');
-      iframe.src = entry.fileUrl;
-      media.appendChild(iframe);
-    } else if (entry.fileUrl) {
-      const img = document.createElement('img');
-      img.src = entry.fileUrl;
-      media.appendChild(img);
+if (entry.fileUrl) {
+    if (entry.fileUrl.includes('/preview')) {
+        // Google Drive preview
+        const iframe = document.createElement('iframe');
+        iframe.src = entry.fileUrl;
+        media.appendChild(iframe);
+    } else if (entry.fileUrl.includes('ibb.co')) {
+        // Обработка ImgBB ссылок
+        let imgUrl;
+        
+        if (entry.fileUrl.includes('i.ibb.co')) {
+            // Уже прямая ссылка (https://i.ibb.co/...)
+            imgUrl = entry.fileUrl;
+        } else {
+            // Короткая ссылка (https://ibb.co/...) - преобразуем
+            imgUrl = entry.fileUrl.replace('ibb.co', 'i.ibb.co') + '.jpg';
+        }
+        
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.onerror = function() {
+            this.src = 'https://via.placeholder.com/400x300?text=Image+not+found';
+        };
+        media.appendChild(img);
+    } else {
+        // Любая другая ссылка на изображение
+        const img = document.createElement('img');
+        img.src = entry.fileUrl;
+        media.appendChild(img);
     }
+}
 
     const overlay = document.createElement('div');
     overlay.className = 'img-overlay';
