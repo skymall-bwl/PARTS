@@ -368,39 +368,15 @@
     const media = document.createElement('div');
     media.className = 'media-block';
 
-if (entry.fileUrl) {
-    console.log("Обработка URL:", entry.fileUrl); // Отладка
-    
-    if (entry.fileUrl.includes('/preview')) {
-        // Google Drive preview (оставляем iframe)
-        const iframe = document.createElement('iframe');
-        iframe.src = entry.fileUrl;
-        media.appendChild(iframe);
-    } 
-    else if (entry.fileUrl.includes('ibb.co')) {
-        // Вариант 1: Прямая вставка через <img> (если CORS разрешён)
-        const img = document.createElement('img');
-        img.src = entry.fileUrl.includes('i.ibb.co') 
-            ? entry.fileUrl 
-            : entry.fileUrl.replace('ibb.co', 'i.ibb.co') + '.jpg';
-        
-        img.onerror = function() {
-            // Вариант 2: Если не загрузилось — пробуем iframe
-            console.log("Не удалось загрузить изображение, пробуем iframe...");
-            const iframe = document.createElement('iframe');
-            iframe.src = entry.fileUrl;
-            media.innerHTML = ''; // Очищаем media
-            media.appendChild(iframe);
-        };
-        media.appendChild(img);
-    } 
-    else {
-        // Любые другие ссылки (просто вставляем как изображение)
-        const img = document.createElement('img');
-        img.src = entry.fileUrl;
-        media.appendChild(img);
+    if (entry.fileUrl && entry.fileUrl.includes('/preview')) {
+      const iframe = document.createElement('iframe');
+      iframe.src = entry.fileUrl;
+      media.appendChild(iframe);
+    } else if (entry.fileUrl) {
+      const img = document.createElement('img');
+      img.src = entry.fileUrl;
+      media.appendChild(img);
     }
-}
 
     const overlay = document.createElement('div');
     overlay.className = 'img-overlay';
