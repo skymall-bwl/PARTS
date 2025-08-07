@@ -26,12 +26,30 @@
 
     .top-controls {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-wrap: nowrap; /* Важно - всегда в одну строку */
       gap: 12px;
       margin: 0 auto 25px;
       padding: 0 0 15px;
       border-bottom: 1px solid rgba(0,0,0,0.1);
+      overflow-x: auto; /* Горизонтальная прокрутка */
+      scrollbar-width: thin;
+      scrollbar-color: #1a2f40 #e0e5eb;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Стили для скроллбара */
+    .top-controls::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .top-controls::-webkit-scrollbar-track {
+      background: #e0e5eb;
+      border-radius: 3px;
+    }
+
+    .top-controls::-webkit-scrollbar-thumb {
+      background: #1a2f40;
+      border-radius: 3px;
     }
 
     .btn-top {
@@ -51,6 +69,7 @@
       min-width: 140px;
       position: relative;
       overflow: hidden;
+      flex-shrink: 0; /* Предотвращает сжатие кнопок */
     }
 
     .btn-top:hover {
@@ -393,6 +412,8 @@
       display: flex;
       gap: 12px;
       margin: 0 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     /* Адаптация для мобильных */
@@ -408,7 +429,7 @@
       .btn-top {
         height: 55px;
         font-size: 15px;
-        min-width: 120px;
+        min-width: 130px;
         padding: 0 15px;
       }
       
@@ -420,6 +441,7 @@
       .top-controls select.btn-top {
         padding-right: 40px;
         background-position: right 15px center;
+        min-width: 180px;
       }
       
       .controls {
@@ -462,7 +484,7 @@
       .btn-top {
         height: 50px;
         font-size: 14px;
-        min-width: 110px;
+        min-width: 120px;
         padding: 0 12px;
       }
       
@@ -529,7 +551,21 @@
 </div>
 
 <script>
+  // Проверка работоспособности API
   const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
+
+  // Проверка доступности API
+  async function checkAPI() {
+    try {
+      const response = await fetch(`${API_URL}?action=ping`);
+      if (!response.ok) throw new Error('API не отвечает');
+      return true;
+    } catch (error) {
+      console.error('Ошибка доступа к API:', error);
+      alert('Ошибка подключения к серверу. Проверьте интернет-соединение.');
+      return false;
+    }
+  }
 
   let allEntries = [];
   let currentEntries = [];
@@ -538,11 +574,19 @@
 
   async function getEntries() {
     try {
+      // Проверяем доступность API перед запросом
+      if (!(await checkAPI())) return [];
+      
       const res = await fetch(`${API_URL}?action=getEntries`);
-      return await res.json();
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('Invalid data format');
+      
+      return data;
     } catch (error) {
       console.error("Ошибка при загрузке данных:", error);
-      alert("Не удалось загрузить данные. Проверьте соединение.");
+      showError("Не удалось загрузить данные. Проверьте соединение.");
       return [];
     }
   }
@@ -599,6 +643,19 @@
     }
   }
 
+  function showError(message) {
+    const container = document.getElementById('cardsContainer');
+    container.innerHTML = `
+      <div class="card" style="text-align: center; padding: 40px; background: #fff8f8; border: 2px solid #ffcccc;">
+        <h2 style="color: #dc143c; margin: 0;"><i class="fas fa-exclamation-triangle"></i> Ошибка</h2>
+        <p style="font-size: 18px; margin-top: 20px;">${message}</p>
+        <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 24px; background: #dc143c; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+          <i class="fas fa-redo"></i> Перезагрузить
+        </button>
+      </div>
+    `;
+  }
+
   function createCard(entry) {
     const div = document.createElement('div');
     div.className = 'card';
@@ -615,6 +672,14 @@
     } else if (entry.fileUrl) {
       const img = document.createElement('img');
       img.src = entry.fileUrl;
+      img.onerror = function() {
+        this.onerror = null;
+        this.parentNode.innerHTML = `
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#2c3e50; color:white; font-size:20px; font-weight:bold;">
+            Ошибка загрузки изображения
+          </div>
+        `;
+      };
       media.appendChild(img);
     } else {
       const placeholder = document.createElement('div');
@@ -690,7 +755,7 @@
       if (deltaStr === null) return;
       
       const delta = Number(deltaStr);
-      if (!isNaN(delta) {
+      if (!isNaN(delta)) {
         const res = await updateQuantity(entry.partNumber, delta);
         if (res.status === 'success') {
           qtyInput.value = res.quantity;
@@ -739,24 +804,34 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.9);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1000;
       font-size: 24px;
       color: #1a2f40;
+      flex-direction: column;
     `;
-    loader.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Загрузка данных...';
+    loader.innerHTML = `
+      <i class="fas fa-spinner fa-spin" style="font-size: 48px; margin-bottom: 20px;"></i>
+      <div>Загрузка данных...</div>
+    `;
     document.body.appendChild(loader);
     
     try {
       allEntries = await getEntries();
+      if (allEntries.length === 0) {
+        showError("Данные не найдены. Возможно, сервер недоступен или база пуста.");
+        return;
+      }
+      
       currentEntries = [...allEntries];
       currentPage = 1;
       renderPage(currentPage);
     } catch (error) {
       console.error("Ошибка загрузки:", error);
+      showError("Произошла ошибка при загрузке данных");
     } finally {
       document.body.removeChild(loader);
     }
@@ -773,7 +848,7 @@
     if (pageData.length === 0) {
       container.innerHTML = `
         <div class="card" style="text-align: center; padding: 40px;">
-          <h2 style="color: #dc143c; margin: 0;">Данные не найдены</h2>
+          <h2 style="color: #dc143c; margin: 0;"><i class="fas fa-search"></i> Данные не найдены</h2>
           <p style="font-size: 18px;">Попробуйте изменить параметры поиска</p>
         </div>
       `;
@@ -809,7 +884,7 @@
     if (startPage > 2) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      dots.style = 'padding: 0 10px; color: #718096;';
+      dots.style = 'padding: 0 10px; color: #718096; display: flex; align-items: flex-end;';
       pageContainer.appendChild(dots);
     }
     
@@ -826,7 +901,7 @@
     if (endPage < totalPages - 1) {
       const dots = document.createElement('span');
       dots.textContent = '...';
-      dots.style = 'padding: 0 10px; color: #718096;';
+      dots.style = 'padding: 0 10px; color: #718096; display: flex; align-items: flex-end;';
       pageContainer.appendChild(dots);
     }
     
