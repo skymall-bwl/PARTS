@@ -86,7 +86,6 @@
       box-shadow: 0 6px 10px rgba(0,0,0,0.15);
     }
 
-    /* СТИЛЬ ДЛЯ ВЫПАДАЮЩЕГО СПИСКА С ИКОНКОЙ ФИЛЬТРА */
     .select-wrapper {
       position: relative;
       min-width: 120px;
@@ -114,7 +113,7 @@
     }
 
     .select-wrapper::before {
-      content: "\f0b0 Фильтр"; /* Иконка фильтра + текст */
+      content: "\f0b0 Фильтр";
       position: absolute;
       top: 0;
       left: 0;
@@ -152,7 +151,6 @@
       transform: translateY(-50%) rotate(180deg);
     }
 
-    /* Цвет выпадающего списка - #1a2f40 */
     .select-wrapper select option {
       padding: 12px 16px;
       background: #1a2f40;
@@ -422,14 +420,13 @@
       border-left: 4px solid #dc143c;
     }
 
-    /* УЛУЧШЕННАЯ ПАГИНАЦИЯ */
     .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 30px;
-      gap: 10px; /* Уменьшен gap */
-      flex-wrap: nowrap; /* Запрет переноса на новую строку */
+      gap: 10px;
+      flex-wrap: nowrap;
       width: 100%;
       max-width: 900px;
       margin: 30px auto 0;
@@ -441,15 +438,15 @@
       font-weight: 700;
       border: none;
       border-radius: 10px;
-      padding: 18px 30px; /* Увеличен padding */
-      font-size: 20px; /* Увеличен размер шрифта */
+      padding: 18px 30px;
+      font-size: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
       min-width: 140px;
-      height: 60px; /* Увеличенная высота */
+      height: 60px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
@@ -471,37 +468,38 @@
     }
 
     .pagination button i {
-      font-size: 24px; /* Увеличены иконки */
+      font-size: 24px;
     }
 
     .page-numbers {
       display: flex;
-      gap: 4px; /* Уменьшен gap */
+      gap: 4px;
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap; /* Запрет переноса на новую строку */
+      flex-wrap: nowrap;
     }
 
-.page-numbers button {
-  min-width: 40px;
-  height: 60px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  border-radius: 16px;
-  background: linear-gradient(to bottom, #dc143c, #b01030);
-  color: white;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.pagination button {
-  margin: 0 6px; /* можно изменить на 8px, 10px и т.д. */
-}
+    .page-numbers button {
+      min-width: 40px;
+      height: 60px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-radius: 16px;
+      background: linear-gradient(to bottom, #dc143c, #b01030);
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .pagination button {
+      margin: 0 6px;
+    }
 
     .page-numbers button:hover {
       background: linear-gradient(to bottom, #e51c47, #c01238);
@@ -512,7 +510,13 @@
     .page-numbers button.active {
       background: linear-gradient(to bottom, #1f2937, #0d1520);
       transform: scale(1.1);
+    }
 
+    .no-data {
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      color: #666;
     }
   </style>
 </head>
@@ -586,7 +590,6 @@
     if (userEmail && allowedEmails.includes(userEmail)) {
       document.getElementById("login").style.display = "none";
       document.getElementById("content").style.display = "block";
-      // Запускаем приложение после авторизации
       initApp();
     }
   };
@@ -602,9 +605,8 @@
     return JSON.parse(jsonPayload);
   }
 
-  // Инициализация приложения после авторизации
+  // Инициализация приложения
   function initApp() {
-    // Весь код приложения
     const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
 
     let allEntries = [];
@@ -613,6 +615,7 @@
     let totalPages = 1;
     const cardsPerPage = 5;
 
+    // Основные функции приложения
     async function getEntries() {
       const res = await fetch(`${API_URL}?action=getEntries`);
       return await res.json();
@@ -705,7 +708,7 @@
           await deleteEntry(entry.rowIndex);
           allEntries = allEntries.filter(e => e.rowIndex !== entry.rowIndex);
           currentEntries = currentEntries.filter(e => e.rowIndex !== entry.rowIndex);
-          totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+          updateTotalPages();
           if (currentPage > totalPages) currentPage = totalPages;
           renderPage(currentPage);
         }
@@ -748,23 +751,35 @@
       return div;
     }
 
-    async function loadEntries() {
-      allEntries = await getEntries();
-      currentEntries = [...allEntries];
+    function updateTotalPages() {
       totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-      currentPage = 1;
-      renderPage(currentPage);
+      console.log('Updated total pages:', totalPages);
     }
 
     function renderPage(page) {
+      console.log(`Rendering page ${page} of ${totalPages}`);
+      
       const container = document.getElementById('cardsContainer');
+      if (!container) {
+        console.error('Cards container not found!');
+        return;
+      }
+      
       container.innerHTML = '';
 
       const start = (page - 1) * cardsPerPage;
       const end = start + cardsPerPage;
       const pageData = currentEntries.slice(start, end);
 
-      pageData.forEach(e => container.appendChild(createCard(e)));
+      if (pageData.length === 0) {
+        container.innerHTML = '<div class="no-data">Нет данных для отображения</div>';
+        return;
+      }
+
+      pageData.forEach(entry => {
+        const card = createCard(entry);
+        container.appendChild(card);
+      });
 
       renderPageNumbers();
       updatePaginationControls();
@@ -773,157 +788,146 @@
 
     function renderPageNumbers() {
       const pageContainer = document.getElementById('pageNumbers');
-      pageContainer.innerHTML = '';
-      
-      const maxVisiblePages = 3; // Уменьшено с 7 до 5
-      let startPage = Math.max(currentPage - 2, 1); // Изменено для центрирования
-      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-      
-      if (endPage - startPage < maxVisiblePages - 1) {
-        startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      if (!pageContainer) {
+        console.error('Page numbers container not found!');
+        return;
       }
       
-      // Добавляем многоточие и первую страницу если нужно
+      pageContainer.innerHTML = '';
+      
+      const maxVisiblePages = 5;
+      let startPage = Math.max(currentPage - 2, 1);
+      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+      
       if (startPage > 1) {
-        const firstBtn = document.createElement('button');
-        firstBtn.textContent = 1;
-        firstBtn.onclick = () => { currentPage = 1; renderPage(currentPage); };
-        if (currentPage === 1) firstBtn.classList.add('active');
-        pageContainer.appendChild(firstBtn);
-        
+        addPageButton(1);
         if (startPage > 2) {
-          const dots = document.createElement('span');
-          dots.textContent = '...';
-          dots.style.padding = '0 10px';
-          dots.style.fontSize = '18px'; // Уменьшен размер
-          pageContainer.appendChild(dots);
+          addDots();
         }
       }
       
-      // Основные страницы
       for (let i = startPage; i <= endPage; i++) {
+        addPageButton(i);
+      }
+      
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          addDots();
+        }
+        addPageButton(totalPages);
+      }
+      
+      function addPageButton(page) {
         const btn = document.createElement('button');
-        btn.textContent = i;
-        if (i === currentPage) btn.classList.add('active');
-        btn.onclick = () => { currentPage = i; renderPage(currentPage); };
+        btn.textContent = page;
+        if (page === currentPage) {
+          btn.classList.add('active');
+        }
+        btn.onclick = () => goToPage(page);
         pageContainer.appendChild(btn);
       }
       
-      // Добавляем многоточие и последнюю страницу если нужно
-      if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-          const dots = document.createElement('span');
-          dots.textContent = '...';
-          dots.style.padding = '0 10px';
-          dots.style.fontSize = '18px'; // Уменьшен размер
-          pageContainer.appendChild(dots);
-        }
-        
-        const lastBtn = document.createElement('button');
-        lastBtn.textContent = totalPages;
-        lastBtn.onclick = () => { currentPage = totalPages; renderPage(currentPage); };
-        if (currentPage === totalPages) lastBtn.classList.add('active');
-        pageContainer.appendChild(lastBtn);
+      function addDots() {
+        const dots = document.createElement('span');
+        dots.textContent = '...';
+        dots.style.padding = '0 10px';
+        pageContainer.appendChild(dots);
       }
     }
 
-    function updatePaginationControls() {
-      document.getElementById('prevBtn').disabled = (currentPage === 1);
-      document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+    function goToPage(page) {
+      if (page < 1 || page > totalPages) return;
+      
+      currentPage = page;
+      renderPage(currentPage);
+      updatePaginationControls();
     }
 
     function nextPage() {
       if (currentPage < totalPages) {
-        currentPage++;
-        renderPage(currentPage);
+        goToPage(currentPage + 1);
       }
     }
 
     function prevPage() {
       if (currentPage > 1) {
-        currentPage--;
-        renderPage(currentPage);
+        goToPage(currentPage - 1);
       }
+    }
+
+    function updatePaginationControls() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      if (prevBtn) prevBtn.disabled = currentPage <= 1;
+      if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
     }
 
     function resetSearch() {
       currentEntries = [...allEntries];
-      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+      updateTotalPages();
       currentPage = 1;
       renderPage(currentPage);
       document.getElementById('sortSelect').value = 'all';
     }
 
-    document.getElementById('btnSearch').addEventListener('click', () => {
+    // Инициализация событий
+    document.getElementById('btnSearch')?.addEventListener('click', () => {
       const term = prompt('Введите номер детали для поиска:');
       if (term !== null) {
         const searchTerm = term.toLowerCase().trim();
-        if (searchTerm.length === 0) {
-          currentEntries = [...allEntries];
-        } else {
-          currentEntries = allEntries.filter(e => e.partNumber.toLowerCase().includes(searchTerm));
-        }
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentEntries = searchTerm.length === 0 
+          ? [...allEntries] 
+          : allEntries.filter(e => e.partNumber.toLowerCase().includes(searchTerm));
+        updateTotalPages();
         currentPage = 1;
         renderPage(currentPage);
         document.getElementById('sortSelect').value = 'all';
       }
     });
 
-    const sortSelect = document.getElementById('sortSelect');
-    sortSelect.addEventListener('focus', function() {
-      this.parentElement.classList.add('active');
-    });
-    
-    sortSelect.addEventListener('blur', function() {
-      this.parentElement.classList.remove('active');
-    });
-    
-    sortSelect.addEventListener('change', async function() {
+    document.getElementById('sortSelect')?.addEventListener('change', async function() {
       if (this.value === 'all') {
         currentEntries = [...allEntries];
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-        currentPage = 1;
-        renderPage(currentPage);
       } else if (this.value === 'popular') {
-        const popularEntries = await getPopularEntries();
-        if (popularEntries && popularEntries.length > 0 && popularEntries[0].lastChangeDate) {
-          popularEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
+        currentEntries = await getPopularEntries();
+        if (currentEntries && currentEntries[0]?.lastChangeDate) {
+          currentEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
         }
-        currentEntries = popularEntries;
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-        currentPage = 1;
-        renderPage(currentPage);
       } else if (this.value === 'mostPopular') {
-        const mostPopularEntries = await getMostPopularEntries();
-        if (!mostPopularEntries || mostPopularEntries.length === 0) {
+        currentEntries = await getMostPopularEntries();
+        if (!currentEntries?.length) {
           alert('Нет данных для сортировки "всё время"');
           return;
         }
-        currentEntries = mostPopularEntries;
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-        currentPage = 1;
-        renderPage(currentPage);
       } else if (this.value === 'sortByQty') {
         currentEntries = [...allEntries].sort((a, b) => a.quantity - b.quantity);
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-        currentPage = 1;
-        renderPage(currentPage);
       }
+      
+      updateTotalPages();
+      currentPage = 1;
+      renderPage(currentPage);
     });
 
-    document.getElementById('modalClose').onclick = () => {
+    document.getElementById('modalClose')?.addEventListener('click', () => {
       document.getElementById('modalOverlay').style.display = 'none';
-    };
+    });
 
-    document.getElementById('modalOverlay').onclick = (e) => {
+    document.getElementById('modalOverlay')?.addEventListener('click', (e) => {
       if (e.target === document.getElementById('modalOverlay')) {
         document.getElementById('modalOverlay').style.display = 'none';
       }
-    };
+    });
 
-    // Запускаем загрузку данных
-    loadEntries();
+    // Загрузка данных
+    async function loadData() {
+      allEntries = await getEntries();
+      currentEntries = [...allEntries];
+      updateTotalPages();
+      renderPage(currentPage);
+    }
+
+    loadData();
   }
 </script>
 </body>
