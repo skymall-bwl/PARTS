@@ -4,7 +4,35 @@
   <meta charset="UTF-8" />
   <title>ДЕТАЛИ SKYMALL</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Identity Script -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
+    /* Стили для авторизации */
+    #login {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+    
+    #login h2 {
+      color: #1a2f40;
+      margin-bottom: 20px;
+    }
+    
+    #content {
+      display: none;
+      width: 100%;
+    }
+
     body {
       margin: 0;
       padding: 20px;
@@ -489,357 +517,414 @@
   </style>
 </head>
 <body>
-<div class="top-controls">
-  <div class="select-wrapper">
-    <select id="sortSelect" title="Фильтр">
-      <option value="all">Все детали</option>
-      <option value="popular">Пос. взят. за 30 дней</option>
-      <option value="mostPopular">Популярные</option>
-      <option value="sortByQty">Остатки</option>
-    </select>
+<!-- Блок авторизации -->
+<div id="login">
+  <h2>Вход на сайт</h2>
+  <div id="g_id_onload"
+       data-client_id="328749588235-bgfeukqogpoq2ha65j7j0vk840hctiaq.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
   </div>
-  
-  <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
-  <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
-  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
-  <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
+  <div class="g_id_signin" data-type="standard"></div>
 </div>
 
-<div class="cards" id="cardsContainer"></div>
+<!-- Контент для авторизованных -->
+<div id="content" style="display:none">
+  <div class="top-controls">
+    <div class="select-wrapper">
+      <select id="sortSelect" title="Фильтр">
+        <option value="all">Все детали</option>
+        <option value="popular">Пос. взят. за 30 дней</option>
+        <option value="mostPopular">Популярные</option>
+        <option value="sortByQty">Остатки</option>
+      </select>
+    </div>
+    
+    <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
+    <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
+  </div>
 
-<div class="pagination">
-  <button onclick="prevPage()" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
-  <div class="page-numbers" id="pageNumbers"></div>
-  <button onclick="nextPage()" id="nextBtn">Вперёд <i class="fas fa-arrow-right"></i></button>
-</div>
+  <div class="cards" id="cardsContainer"></div>
 
-<div id="modalOverlay" class="modal-overlay">
-  <div class="modal">
-    <div id="modalClose" class="modal-close">×</div>
-    <h3>История изменений</h3>
-    <pre id="modalContent"></pre>
+  <div class="pagination">
+    <button onclick="prevPage()" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+    <div class="page-numbers" id="pageNumbers"></div>
+    <button onclick="nextPage()" id="nextBtn">Вперёд <i class="fas fa-arrow-right"></i></button>
+  </div>
+
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div id="modalClose" class="modal-close">×</div>
+      <h3>История изменений</h3>
+      <pre id="modalContent"></pre>
+    </div>
   </div>
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
+  // Настройки авторизации
+  const allowedEmails = ["vadiksss900@gmail.com", "sergey99belov@gmail.com"];
 
-  let allEntries = [];
-  let currentEntries = [];
-  let currentPage = 1;
-  let totalPages = 1;
-  const cardsPerPage = 5;
+  // Обработчик ответа от Google
+  function handleCredentialResponse(response) {
+    const data = parseJwt(response.credential);
+    const email = data.email;
 
-  async function getEntries() {
-    const res = await fetch(`${API_URL}?action=getEntries`);
-    return await res.json();
+    if (allowedEmails.includes(email)) {
+      localStorage.setItem("userEmail", email);
+      location.reload();
+    } else {
+      alert("Доступ запрещён для: " + email);
+    }
   }
 
-  async function updateQuantity(partNumber, delta) {
-    const res = await fetch(`${API_URL}?action=updateQuantity&partNumber=${encodeURIComponent(partNumber)}&delta=${delta}`);
-    return await res.json();
+  // Проверка авторизации при загрузке страницы
+  window.onload = () => {
+    const userEmail = localStorage.getItem("userEmail");
+    if (userEmail && allowedEmails.includes(userEmail)) {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("content").style.display = "block";
+      // Запускаем приложение после авторизации
+      initApp();
+    }
+  };
+
+  // Функция для разбора JWT токена
+  function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
   }
 
-  async function deleteEntry(rowIndex) {
-    const res = await fetch(`${API_URL}?action=deleteEntry&rowIndex=${rowIndex}`);
-    return await res.json();
-  }
+  // Инициализация приложения после авторизации
+  function initApp() {
+    // Весь код приложения
+    const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
 
-  async function getHistory(partNumber) {
-    const res = await fetch(`${API_URL}?action=getHistory&partNumber=${encodeURIComponent(partNumber)}`);
-    return await res.text();
-  }
+    let allEntries = [];
+    let currentEntries = [];
+    let currentPage = 1;
+    let totalPages = 1;
+    const cardsPerPage = 5;
 
-  async function getPopularEntries() {
-    const res = await fetch(`${API_URL}?action=getPopularEntries`);
-    return await res.json();
-  }
-
-  async function getMostPopularEntries() {
-    const res = await fetch(`${API_URL}?action=getMostPopularEntries`);
-    return await res.json();
-  }
-
-  function createCard(entry) {
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.dataset.row = entry.rowIndex;
-    div.dataset.partNumber = entry.partNumber.toLowerCase();
-
-    const media = document.createElement('div');
-    media.className = 'media-block';
-
-    if (entry.fileUrl && entry.fileUrl.includes('/preview')) {
-      const iframe = document.createElement('iframe');
-      iframe.src = entry.fileUrl;
-      media.appendChild(iframe);
-    } else if (entry.fileUrl) {
-      const img = document.createElement('img');
-      img.src = entry.fileUrl;
-      media.appendChild(img);
+    async function getEntries() {
+      const res = await fetch(`${API_URL}?action=getEntries`);
+      return await res.json();
     }
 
-    const overlay = document.createElement('div');
-    overlay.className = 'img-overlay';
-    media.appendChild(overlay);
+    async function updateQuantity(partNumber, delta) {
+      const res = await fetch(`${API_URL}?action=updateQuantity&partNumber=${encodeURIComponent(partNumber)}&delta=${delta}`);
+      return await res.json();
+    }
 
-    const rem = document.createElement('div');
-    rem.className = 'icon remove';
-    rem.textContent = 'Х';
-    media.append(rem);
+    async function deleteEntry(rowIndex) {
+      const res = await fetch(`${API_URL}?action=deleteEntry&rowIndex=${rowIndex}`);
+      return await res.json();
+    }
 
-    div.append(media);
+    async function getHistory(partNumber) {
+      const res = await fetch(`${API_URL}?action=getHistory&partNumber=${encodeURIComponent(partNumber)}`);
+      return await res.text();
+    }
 
-    const controls = document.createElement('div');
-    controls.className = 'controls';
+    async function getPopularEntries() {
+      const res = await fetch(`${API_URL}?action=getPopularEntries`);
+      return await res.json();
+    }
 
-    const pill = document.createElement('div');
-    pill.className = 'pill';
-    pill.textContent = entry.partNumber;
+    async function getMostPopularEntries() {
+      const res = await fetch(`${API_URL}?action=getMostPopularEntries`);
+      return await res.json();
+    }
 
-    const qtyInput = document.createElement('input');
-    qtyInput.type = 'text';
-    qtyInput.value = entry.quantity;
-    qtyInput.readOnly = true;
+    function createCard(entry) {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.dataset.row = entry.rowIndex;
+      div.dataset.partNumber = entry.partNumber.toLowerCase();
 
-    const btnAdd = document.createElement('button');
-    btnAdd.className = 'btn btn-add';
-    btnAdd.innerHTML = '<i class="fas fa-plus-circle"></i> ДОБАВИТЬ';
+      const media = document.createElement('div');
+      media.className = 'media-block';
 
-    const btnInfo = document.createElement('button');
-    btnInfo.className = 'btn btn-info';
-    btnInfo.innerHTML = '<i class="fas fa-history"></i> ИСТОРИЯ';
+      if (entry.fileUrl && entry.fileUrl.includes('/preview')) {
+        const iframe = document.createElement('iframe');
+        iframe.src = entry.fileUrl;
+        media.appendChild(iframe);
+      } else if (entry.fileUrl) {
+        const img = document.createElement('img');
+        img.src = entry.fileUrl;
+        media.appendChild(img);
+      }
 
-    const btnTake = document.createElement('button');
-    btnTake.className = 'btn btn-take';
-    btnTake.innerHTML = '<i class="fas fa-shopping-cart"></i> ВЗЯТЬ';
+      const overlay = document.createElement('div');
+      overlay.className = 'img-overlay';
+      media.appendChild(overlay);
 
-    controls.append(pill, qtyInput, btnAdd, btnInfo, btnTake);
-    div.append(controls);
+      const rem = document.createElement('div');
+      rem.className = 'icon remove';
+      rem.textContent = 'Х';
+      media.append(rem);
 
-    rem.onclick = async () => {
-      if (confirm('Удалить эту запись?')) {
-        await deleteEntry(entry.rowIndex);
-        allEntries = allEntries.filter(e => e.rowIndex !== entry.rowIndex);
-        currentEntries = currentEntries.filter(e => e.rowIndex !== entry.rowIndex);
-        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-        if (currentPage > totalPages) currentPage = totalPages;
+      div.append(media);
+
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+
+      const pill = document.createElement('div');
+      pill.className = 'pill';
+      pill.textContent = entry.partNumber;
+
+      const qtyInput = document.createElement('input');
+      qtyInput.type = 'text';
+      qtyInput.value = entry.quantity;
+      qtyInput.readOnly = true;
+
+      const btnAdd = document.createElement('button');
+      btnAdd.className = 'btn btn-add';
+      btnAdd.innerHTML = '<i class="fas fa-plus-circle"></i> ДОБАВИТЬ';
+
+      const btnInfo = document.createElement('button');
+      btnInfo.className = 'btn btn-info';
+      btnInfo.innerHTML = '<i class="fas fa-history"></i> ИСТОРИЯ';
+
+      const btnTake = document.createElement('button');
+      btnTake.className = 'btn btn-take';
+      btnTake.innerHTML = '<i class="fas fa-shopping-cart"></i> ВЗЯТЬ';
+
+      controls.append(pill, qtyInput, btnAdd, btnInfo, btnTake);
+      div.append(controls);
+
+      rem.onclick = async () => {
+        if (confirm('Удалить эту запись?')) {
+          await deleteEntry(entry.rowIndex);
+          allEntries = allEntries.filter(e => e.rowIndex !== entry.rowIndex);
+          currentEntries = currentEntries.filter(e => e.rowIndex !== entry.rowIndex);
+          totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+          if (currentPage > totalPages) currentPage = totalPages;
+          renderPage(currentPage);
+        }
+      };
+
+      btnAdd.onclick = async () => {
+        const deltaStr = prompt('Введите число для добавления:');
+        const delta = Number(deltaStr);
+        if (deltaStr !== null && !isNaN(delta)) {
+          const res = await updateQuantity(entry.partNumber, delta);
+          if (res.status === 'success') {
+            qtyInput.value = res.quantity;
+            entry.quantity = res.quantity;
+          } else {
+            alert(res.message);
+          }
+        }
+      };
+
+      btnTake.onclick = async () => {
+        const deltaStr = prompt('Введите число для вычитания:');
+        const delta = Number(deltaStr);
+        if (deltaStr !== null && !isNaN(delta)) {
+          const res = await updateQuantity(entry.partNumber, -delta);
+          if (res.status === 'success') {
+            qtyInput.value = res.quantity;
+            entry.quantity = res.quantity;
+          } else {
+            alert(res.message);
+          }
+        }
+      };
+
+      btnInfo.onclick = async () => {
+        const hist = await getHistory(entry.partNumber);
+        document.getElementById('modalContent').textContent = hist;
+        document.getElementById('modalOverlay').style.display = 'flex';
+      };
+
+      return div;
+    }
+
+    async function loadEntries() {
+      allEntries = await getEntries();
+      currentEntries = [...allEntries];
+      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+      currentPage = 1;
+      renderPage(currentPage);
+    }
+
+    function renderPage(page) {
+      const container = document.getElementById('cardsContainer');
+      container.innerHTML = '';
+
+      const start = (page - 1) * cardsPerPage;
+      const end = start + cardsPerPage;
+      const pageData = currentEntries.slice(start, end);
+
+      pageData.forEach(e => container.appendChild(createCard(e)));
+
+      renderPageNumbers();
+      updatePaginationControls();
+      window.scrollTo(0, 0);
+    }
+
+    function renderPageNumbers() {
+      const pageContainer = document.getElementById('pageNumbers');
+      pageContainer.innerHTML = '';
+      
+      const maxVisiblePages = 3; // Уменьшено с 7 до 5
+      let startPage = Math.max(currentPage - 2, 1); // Изменено для центрирования
+      let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
+      
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+      }
+      
+      // Добавляем многоточие и первую страницу если нужно
+      if (startPage > 1) {
+        const firstBtn = document.createElement('button');
+        firstBtn.textContent = 1;
+        firstBtn.onclick = () => { currentPage = 1; renderPage(currentPage); };
+        if (currentPage === 1) firstBtn.classList.add('active');
+        pageContainer.appendChild(firstBtn);
+        
+        if (startPage > 2) {
+          const dots = document.createElement('span');
+          dots.textContent = '...';
+          dots.style.padding = '0 10px';
+          dots.style.fontSize = '18px'; // Уменьшен размер
+          pageContainer.appendChild(dots);
+        }
+      }
+      
+      // Основные страницы
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = i; renderPage(currentPage); };
+        pageContainer.appendChild(btn);
+      }
+      
+      // Добавляем многоточие и последнюю страницу если нужно
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          const dots = document.createElement('span');
+          dots.textContent = '...';
+          dots.style.padding = '0 10px';
+          dots.style.fontSize = '18px'; // Уменьшен размер
+          pageContainer.appendChild(dots);
+        }
+        
+        const lastBtn = document.createElement('button');
+        lastBtn.textContent = totalPages;
+        lastBtn.onclick = () => { currentPage = totalPages; renderPage(currentPage); };
+        if (currentPage === totalPages) lastBtn.classList.add('active');
+        pageContainer.appendChild(lastBtn);
+      }
+    }
+
+    function updatePaginationControls() {
+      document.getElementById('prevBtn').disabled = (currentPage === 1);
+      document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
         renderPage(currentPage);
       }
-    };
-
-    btnAdd.onclick = async () => {
-      const deltaStr = prompt('Введите число для добавления:');
-      const delta = Number(deltaStr);
-      if (deltaStr !== null && !isNaN(delta)) {
-        const res = await updateQuantity(entry.partNumber, delta);
-        if (res.status === 'success') {
-          qtyInput.value = res.quantity;
-          entry.quantity = res.quantity;
-        } else {
-          alert(res.message);
-        }
-      }
-    };
-
-    btnTake.onclick = async () => {
-      const deltaStr = prompt('Введите число для вычитания:');
-      const delta = Number(deltaStr);
-      if (deltaStr !== null && !isNaN(delta)) {
-        const res = await updateQuantity(entry.partNumber, -delta);
-        if (res.status === 'success') {
-          qtyInput.value = res.quantity;
-          entry.quantity = res.quantity;
-        } else {
-          alert(res.message);
-        }
-      }
-    };
-
-    btnInfo.onclick = async () => {
-      const hist = await getHistory(entry.partNumber);
-      document.getElementById('modalContent').textContent = hist;
-      document.getElementById('modalOverlay').style.display = 'flex';
-    };
-
-    return div;
-  }
-
-  async function loadEntries() {
-    allEntries = await getEntries();
-    currentEntries = [...allEntries];
-    totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-    currentPage = 1;
-    renderPage(currentPage);
-  }
-
-  function renderPage(page) {
-    const container = document.getElementById('cardsContainer');
-    container.innerHTML = '';
-
-    const start = (page - 1) * cardsPerPage;
-    const end = start + cardsPerPage;
-    const pageData = currentEntries.slice(start, end);
-
-    pageData.forEach(e => container.appendChild(createCard(e)));
-
-    renderPageNumbers();
-    updatePaginationControls();
-    window.scrollTo(0, 0);
-  }
-
-  function renderPageNumbers() {
-    const pageContainer = document.getElementById('pageNumbers');
-    pageContainer.innerHTML = '';
-    
-    const maxVisiblePages = 3; // Уменьшено с 7 до 5
-    let startPage = Math.max(currentPage - 2, 1); // Изменено для центрирования
-    let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-    
-    if (endPage - startPage < maxVisiblePages - 1) {
-      startPage = Math.max(endPage - maxVisiblePages + 1, 1);
     }
-    
-    // Добавляем многоточие и первую страницу если нужно
-    if (startPage > 1) {
-      const firstBtn = document.createElement('button');
-      firstBtn.textContent = 1;
-      firstBtn.onclick = () => { currentPage = 1; renderPage(currentPage); };
-      if (currentPage === 1) firstBtn.classList.add('active');
-      pageContainer.appendChild(firstBtn);
-      
-      if (startPage > 2) {
-        const dots = document.createElement('span');
-        dots.textContent = '...';
-        dots.style.padding = '0 10px';
-        dots.style.fontSize = '18px'; // Уменьшен размер
-        pageContainer.appendChild(dots);
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
       }
     }
-    
-    // Основные страницы
-    for (let i = startPage; i <= endPage; i++) {
-      const btn = document.createElement('button');
-      btn.textContent = i;
-      if (i === currentPage) btn.classList.add('active');
-      btn.onclick = () => { currentPage = i; renderPage(currentPage); };
-      pageContainer.appendChild(btn);
-    }
-    
-    // Добавляем многоточие и последнюю страницу если нужно
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        const dots = document.createElement('span');
-        dots.textContent = '...';
-        dots.style.padding = '0 10px';
-        dots.style.fontSize = '18px'; // Уменьшен размер
-        pageContainer.appendChild(dots);
-      }
-      
-      const lastBtn = document.createElement('button');
-      lastBtn.textContent = totalPages;
-      lastBtn.onclick = () => { currentPage = totalPages; renderPage(currentPage); };
-      if (currentPage === totalPages) lastBtn.classList.add('active');
-      pageContainer.appendChild(lastBtn);
-    }
-  }
 
-  function updatePaginationControls() {
-    document.getElementById('prevBtn').disabled = (currentPage === 1);
-    document.getElementById('nextBtn').disabled = (currentPage === totalPages);
-  }
-
-  function nextPage() {
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderPage(currentPage);
-    }
-  }
-
-  function prevPage() {
-    if (currentPage > 1) {
-      currentPage--;
-      renderPage(currentPage);
-    }
-  }
-
-  function resetSearch() {
-    currentEntries = [...allEntries];
-    totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-    currentPage = 1;
-    renderPage(currentPage);
-    document.getElementById('sortSelect').value = 'all';
-  }
-
-  document.getElementById('btnSearch').addEventListener('click', () => {
-    const term = prompt('Введите номер детали для поиска:');
-    if (term !== null) {
-      const searchTerm = term.toLowerCase().trim();
-      if (searchTerm.length === 0) {
-        currentEntries = [...allEntries];
-      } else {
-        currentEntries = allEntries.filter(e => e.partNumber.toLowerCase().includes(searchTerm));
-      }
+    function resetSearch() {
+      currentEntries = [...allEntries];
       totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
       currentPage = 1;
       renderPage(currentPage);
       document.getElementById('sortSelect').value = 'all';
     }
-  });
 
-  const sortSelect = document.getElementById('sortSelect');
-  sortSelect.addEventListener('focus', function() {
-    this.parentElement.classList.add('active');
-  });
-  
-  sortSelect.addEventListener('blur', function() {
-    this.parentElement.classList.remove('active');
-  });
-  
-  sortSelect.addEventListener('change', async function() {
-    if (this.value === 'all') {
-      currentEntries = [...allEntries];
-      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-      currentPage = 1;
-      renderPage(currentPage);
-    } else if (this.value === 'popular') {
-      const popularEntries = await getPopularEntries();
-      if (popularEntries && popularEntries.length > 0 && popularEntries[0].lastChangeDate) {
-        popularEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
+    document.getElementById('btnSearch').addEventListener('click', () => {
+      const term = prompt('Введите номер детали для поиска:');
+      if (term !== null) {
+        const searchTerm = term.toLowerCase().trim();
+        if (searchTerm.length === 0) {
+          currentEntries = [...allEntries];
+        } else {
+          currentEntries = allEntries.filter(e => e.partNumber.toLowerCase().includes(searchTerm));
+        }
+        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentPage = 1;
+        renderPage(currentPage);
+        document.getElementById('sortSelect').value = 'all';
       }
-      currentEntries = popularEntries;
-      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-      currentPage = 1;
-      renderPage(currentPage);
-    } else if (this.value === 'mostPopular') {
-      const mostPopularEntries = await getMostPopularEntries();
-      if (!mostPopularEntries || mostPopularEntries.length === 0) {
-        alert('Нет данных для сортировки "всё время"');
-        return;
+    });
+
+    const sortSelect = document.getElementById('sortSelect');
+    sortSelect.addEventListener('focus', function() {
+      this.parentElement.classList.add('active');
+    });
+    
+    sortSelect.addEventListener('blur', function() {
+      this.parentElement.classList.remove('active');
+    });
+    
+    sortSelect.addEventListener('change', async function() {
+      if (this.value === 'all') {
+        currentEntries = [...allEntries];
+        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentPage = 1;
+        renderPage(currentPage);
+      } else if (this.value === 'popular') {
+        const popularEntries = await getPopularEntries();
+        if (popularEntries && popularEntries.length > 0 && popularEntries[0].lastChangeDate) {
+          popularEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
+        }
+        currentEntries = popularEntries;
+        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentPage = 1;
+        renderPage(currentPage);
+      } else if (this.value === 'mostPopular') {
+        const mostPopularEntries = await getMostPopularEntries();
+        if (!mostPopularEntries || mostPopularEntries.length === 0) {
+          alert('Нет данных для сортировки "всё время"');
+          return;
+        }
+        currentEntries = mostPopularEntries;
+        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentPage = 1;
+        renderPage(currentPage);
+      } else if (this.value === 'sortByQty') {
+        currentEntries = [...allEntries].sort((a, b) => a.quantity - b.quantity);
+        totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
+        currentPage = 1;
+        renderPage(currentPage);
       }
-      currentEntries = mostPopularEntries;
-      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-      currentPage = 1;
-      renderPage(currentPage);
-    } else if (this.value === 'sortByQty') {
-      currentEntries = [...allEntries].sort((a, b) => a.quantity - b.quantity);
-      totalPages = Math.ceil(currentEntries.length / cardsPerPage) || 1;
-      currentPage = 1;
-      renderPage(currentPage);
-    }
-  });
+    });
 
-  document.getElementById('modalClose').onclick = () => {
-    document.getElementById('modalOverlay').style.display = 'none';
-  };
-
-  document.getElementById('modalOverlay').onclick = (e) => {
-    if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalClose').onclick = () => {
       document.getElementById('modalOverlay').style.display = 'none';
-    }
-  };
+    };
 
-  loadEntries();
+    document.getElementById('modalOverlay').onclick = (e) => {
+      if (e.target === document.getElementById('modalOverlay')) {
+        document.getElementById('modalOverlay').style.display = 'none';
+      }
+    };
+
+    // Запускаем загрузку данных
+    loadEntries();
+  }
 </script>
 </body>
 </html>
