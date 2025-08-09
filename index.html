@@ -553,9 +553,9 @@
   <div class="cards" id="cardsContainer"></div>
 
   <div class="pagination">
-    <button onclick="prevPage()" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+    <button onclick="pagination.prevPage()" id="prevBtn" disabled><i class="fas fa-arrow-left"></i> Назад</button>
     <div class="page-numbers" id="pageNumbers"></div>
-    <button onclick="nextPage()" id="nextBtn">Вперёд <i class="fas fa-arrow-right"></i></button>
+    <button onclick="pagination.nextPage()" id="nextBtn">Вперёд <i class="fas fa-arrow-right"></i></button>
   </div>
 
   <div id="modalOverlay" class="modal-overlay">
@@ -604,6 +604,12 @@
 
     return JSON.parse(jsonPayload);
   }
+
+  // Глобальный объект для пагинации
+  const pagination = {
+    prevPage: function() {},
+    nextPage: function() {}
+  };
 
   // Инициализация приложения
   function initApp() {
@@ -843,17 +849,18 @@
       updatePaginationControls();
     }
 
-    function nextPage() {
+    // Обновляем глобальные функции пагинации
+    pagination.nextPage = function() {
       if (currentPage < totalPages) {
         goToPage(currentPage + 1);
       }
-    }
+    };
 
-    function prevPage() {
+    pagination.prevPage = function() {
       if (currentPage > 1) {
         goToPage(currentPage - 1);
       }
-    }
+    };
 
     function updatePaginationControls() {
       const prevBtn = document.getElementById('prevBtn');
