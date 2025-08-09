@@ -6,7 +6,7 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Стили для авторизации */
+    /* Упрощённые стили для авторизации */
     .auth-container {
       position: fixed;
       top: 0;
@@ -26,7 +26,7 @@
       padding: 40px;
       border-radius: 20px;
       text-align: center;
-      max-width: 500px;
+      max-width: 400px;
       width: 90%;
       box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
@@ -43,20 +43,14 @@
       justify-content: center;
     }
     
-    .auth-note {
-      margin-top: 25px;
-      font-size: 16px;
-      color: #dc143c;
-      font-weight: bold;
-    }
-    
+    /* Остальные стили остаются без изменений */
     body {
       margin: 0;
       padding: 20px;
       background: #d1d5da;
       font-family: Arial, sans-serif;
     }
-
+    
     .top-controls {
       display: flex;
       flex-wrap: nowrap;
@@ -79,31 +73,20 @@
       white-space: nowrap;
       flex-grow: 1;
       min-width: 90px;
-      max-width: 220px;
+      max-width: 160px; /* Уменьшена максимальная ширина */
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       font-family: inherit;
-      padding: 0 16px;
+      padding: 0 12px; /* Уменьшен padding */
       transition: all 0.3s ease;
       box-sizing: border-box;
       gap: 8px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    .top-controls button.btn-top {
-      background: linear-gradient(to bottom, #1a2f40, #0d1a26);
-      color: #fff;
-    }
-
-    .top-controls button.btn-top:hover {
-      background: linear-gradient(to bottom, #223a51, #0f2233);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    }
-
-    /* СТИЛЬ ДЛЯ ВЫПАДАЮЩЕГО СПИСКА С ИКОНКОЙ ФИЛЬТРА */
+    /* Остальные стили без изменений */
     .select-wrapper {
       position: relative;
       min-width: 120px;
@@ -131,7 +114,7 @@
     }
 
     .select-wrapper::before {
-      content: "\f0b0 Фильтр"; /* Иконка фильтра + текст */
+      content: "\f0b0 Фильтр";
       position: absolute;
       top: 0;
       left: 0;
@@ -169,7 +152,6 @@
       transform: translateY(-50%) rotate(180deg);
     }
 
-    /* Цвет выпадающего списка - #1a2f40 */
     .select-wrapper select option {
       padding: 12px 16px;
       background: #1a2f40;
@@ -439,14 +421,13 @@
       border-left: 4px solid #dc143c;
     }
 
-    /* УЛУЧШЕННАЯ ПАГИНАЦИЯ */
     .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 30px;
-      gap: 10px; /* Уменьшен gap */
-      flex-wrap: nowrap; /* Запрет переноса на новую строку */
+      gap: 10px;
+      flex-wrap: nowrap;
       width: 100%;
       max-width: 900px;
       margin: 30px auto 0;
@@ -458,15 +439,15 @@
       font-weight: 700;
       border: none;
       border-radius: 10px;
-      padding: 18px 30px; /* Увеличен padding */
-      font-size: 20px; /* Увеличен размер шрифта */
+      padding: 18px 30px;
+      font-size: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
       min-width: 140px;
-      height: 60px; /* Увеличенная высота */
+      height: 60px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
@@ -488,37 +469,37 @@
     }
 
     .pagination button i {
-      font-size: 24px; /* Увеличены иконки */
+      font-size: 24px;
     }
 
     .page-numbers {
       display: flex;
-      gap: 4px; /* Уменьшен gap */
+      gap: 4px;
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap; /* Запрет переноса на новую строку */
+      flex-wrap: nowrap;
     }
 
-.page-numbers button {
-  min-width: 40px;
-  height: 60px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  border-radius: 16px;
-  background: linear-gradient(to bottom, #dc143c, #b01030);
-  color: white;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.pagination button {
-  margin: 0 6px; /* можно изменить на 8px, 10px и т.д. */
-}
+    .page-numbers button {
+      min-width: 40px;
+      height: 60px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-radius: 16px;
+      background: linear-gradient(to bottom, #dc143c, #b01030);
+      color: white;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .pagination button {
+      margin: 0 6px;
+    }
 
     .page-numbers button:hover {
       background: linear-gradient(to bottom, #e51c47, #c01238);
@@ -529,7 +510,6 @@
     .page-numbers button.active {
       background: linear-gradient(to bottom, #1f2937, #0d1520);
       transform: scale(1.1);
-
     }
   </style>
 </head>
@@ -539,7 +519,6 @@
   <div class="auth-box">
     <div class="auth-title">Авторизация через Google</div>
     <div id="signinDiv"></div>
-    <div class="auth-note">Доступ разрешен только для авторизованных сотрудников</div>
   </div>
 </div>
 
@@ -558,8 +537,7 @@
     <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
     <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
     <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
-    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
-    <button onclick="signOut()" class="btn-top"><i class="fas fa-sign-out-alt"></i> Выход</button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить</button>
   </div>
 
   <div class="cards" id="cardsContainer"></div>
@@ -616,17 +594,6 @@
     }
   }
   
-  // Функция выхода из системы
-  function signOut() {
-    google.accounts.id.disableAutoSelect();
-    google.accounts.id.prompt(); // Сброс сессии
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('appContent').style.display = 'none';
-    // Сбрасываем состояние приложения
-    allEntries = [];
-    currentEntries = [];
-  }
-  
   // Инициализация Google Sign-In
   function initGoogleSignIn() {
     google.accounts.id.initialize({
@@ -641,7 +608,7 @@
         theme: "outline", 
         size: "large",
         text: "signin_with",
-        width: "300"
+        width: "250"
       }
     );
   }
@@ -811,15 +778,14 @@
     const pageContainer = document.getElementById('pageNumbers');
     pageContainer.innerHTML = '';
     
-    const maxVisiblePages = 3; // Уменьшено с 7 до 5
-    let startPage = Math.max(currentPage - 2, 1); // Изменено для центрирования
+    const maxVisiblePages = 3;
+    let startPage = Math.max(currentPage - 2, 1);
     let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
     
     if (endPage - startPage < maxVisiblePages - 1) {
       startPage = Math.max(endPage - maxVisiblePages + 1, 1);
     }
     
-    // Добавляем многоточие и первую страницу если нужно
     if (startPage > 1) {
       const firstBtn = document.createElement('button');
       firstBtn.textContent = 1;
@@ -831,12 +797,11 @@
         const dots = document.createElement('span');
         dots.textContent = '...';
         dots.style.padding = '0 10px';
-        dots.style.fontSize = '18px'; // Уменьшен размер
+        dots.style.fontSize = '18px';
         pageContainer.appendChild(dots);
       }
     }
     
-    // Основные страницы
     for (let i = startPage; i <= endPage; i++) {
       const btn = document.createElement('button');
       btn.textContent = i;
@@ -845,13 +810,12 @@
       pageContainer.appendChild(btn);
     }
     
-    // Добавляем многоточие и последнюю страницу если нужно
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         const dots = document.createElement('span');
         dots.textContent = '...';
         dots.style.padding = '0 10px';
-        dots.style.fontSize = '18px'; // Уменьшен размер
+        dots.style.fontSize = '18px';
         pageContainer.appendChild(dots);
       }
       
