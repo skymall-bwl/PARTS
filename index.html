@@ -3,54 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <title>ДЕТАЛИ SKYMALL</title>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Упрощённые стили для авторизации */
+    /* Стили для авторизации */
     .auth-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      z-index: 10000;
-      backdrop-filter: blur(10px);
-    }
-    
-    .auth-box {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-    
-    .auth-title {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: #1a2f40;
-    }
-    
-    #signinDiv {
-      margin: 20px 0;
-      display: flex;
       justify-content: center;
+      height: 100vh;
+      background: #d1d5da;
     }
     
-    /* Остальные стили остаются без изменений */
+    .auth-message {
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #1a2f40;
+      text-align: center;
+      max-width: 80%;
+      line-height: 1.5;
+    }
+    
+    .g-signin-button {
+      display: inline-flex;
+      align-items: center;
+      background: #1a73e8;
+      color: white;
+      border-radius: 10px;
+      border: none;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .g-signin-button:hover {
+      background: #1669c1;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    }
+    
+    .g-signin-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .g-signin-button .icon {
+      margin-right: 12px;
+      font-size: 24px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    /* Остальные стили */
     body {
       margin: 0;
       padding: 20px;
       background: #d1d5da;
       font-family: Arial, sans-serif;
     }
-    
+
     .top-controls {
       display: flex;
       flex-wrap: nowrap;
@@ -73,20 +90,31 @@
       white-space: nowrap;
       flex-grow: 1;
       min-width: 90px;
-      max-width: 160px; /* Уменьшена максимальная ширина */
+      max-width: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       font-family: inherit;
-      padding: 0 12px; /* Уменьшен padding */
+      padding: 0 16px;
       transition: all 0.3s ease;
       box-sizing: border-box;
       gap: 8px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    /* Остальные стили без изменений */
+    .top-controls button.btn-top {
+      background: linear-gradient(to bottom, #1a2f40, #0d1a26);
+      color: #fff;
+    }
+
+    .top-controls button.btn-top:hover {
+      background: linear-gradient(to bottom, #223a51, #0f2233);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+
+    /* СТИЛЬ ДЛЯ ВЫПАДАЮЩЕГО СПИСКА С ИКОНКОЙ ФИЛЬТРА */
     .select-wrapper {
       position: relative;
       min-width: 120px;
@@ -114,7 +142,7 @@
     }
 
     .select-wrapper::before {
-      content: "\f0b0 Фильтр";
+      content: "\f0b0 Фильтр"; /* Иконка фильтра + текст */
       position: absolute;
       top: 0;
       left: 0;
@@ -152,6 +180,7 @@
       transform: translateY(-50%) rotate(180deg);
     }
 
+    /* Цвет выпадающего списка - #1a2f40 */
     .select-wrapper select option {
       padding: 12px 16px;
       background: #1a2f40;
@@ -421,13 +450,14 @@
       border-left: 4px solid #dc143c;
     }
 
+    /* УЛУЧШЕННАЯ ПАГИНАЦИЯ */
     .pagination {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 30px;
-      gap: 10px;
-      flex-wrap: nowrap;
+      gap: 10px; /* Уменьшен gap */
+      flex-wrap: nowrap; /* Запрет переноса на новую строку */
       width: 100%;
       max-width: 900px;
       margin: 30px auto 0;
@@ -439,15 +469,15 @@
       font-weight: 700;
       border: none;
       border-radius: 10px;
-      padding: 18px 30px;
-      font-size: 20px;
+      padding: 18px 30px; /* Увеличен padding */
+      font-size: 20px; /* Увеличен размер шрифта */
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s ease;
       min-width: 140px;
-      height: 60px;
+      height: 60px; /* Увеличенная высота */
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
@@ -469,15 +499,15 @@
     }
 
     .pagination button i {
-      font-size: 24px;
+      font-size: 24px; /* Увеличены иконки */
     }
 
     .page-numbers {
       display: flex;
-      gap: 4px;
+      gap: 4px; /* Уменьшен gap */
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap;
+      flex-wrap: nowrap; /* Запрет переноса на новую строку */
     }
 
     .page-numbers button {
@@ -498,7 +528,7 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .pagination button {
-      margin: 0 6px;
+      margin: 0 6px; /* можно изменить на 8px, 10px и т.д. */
     }
 
     .page-numbers button:hover {
@@ -516,14 +546,15 @@
 <body>
 <!-- Контейнер для авторизации -->
 <div id="authContainer" class="auth-container">
-  <div class="auth-box">
-    <div class="auth-title">Авторизация через Google</div>
-    <div id="signinDiv"></div>
+  <div class="auth-message">Для доступа к системе деталей SKYMALL требуется авторизация через корпоративный аккаунт Google</div>
+  <div id="gSignInButton" class="g-signin-button">
+    <i class="fab fa-google icon"></i>
+    <span>Войти через Google</span>
   </div>
 </div>
 
 <!-- Основной контент (изначально скрыт) -->
-<div id="appContent" style="display:none;">
+<div id="mainContent" class="hidden">
   <div class="top-controls">
     <div class="select-wrapper">
       <select id="sortSelect" title="Фильтр">
@@ -537,7 +568,7 @@
     <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
     <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
     <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
-    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить</button>
+    <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
   </div>
 
   <div class="cards" id="cardsContainer"></div>
@@ -557,14 +588,98 @@
   </div>
 </div>
 
+<!-- Загрузка Google API -->
+<script src="https://apis.google.com/js/api:client.js"></script>
 <script>
-  // Список разрешенных email (замените на реальные адреса)
+  // Список разрешенных email-адресов (ЗАМЕНИТЕ НА СВОИ)
   const ALLOWED_USERS = [
     "vadiksss900@gmail.com",
-    "user2@example.com",
-    "user3@example.com"
+    "manager@example.com"
   ];
 
+  // Инициализация Google Auth
+  function initGoogleAuth() {
+    gapi.load('auth2', function() {
+      gapi.auth2.init({
+        client_id: 'ВАШ_CLIENT_ID.apps.googleusercontent.com',
+        cookiepolicy: 'single_host_origin',
+      }).then(auth2 => {
+        // Проверяем, авторизован ли пользователь
+        const user = auth2.currentUser.get();
+        if (user && user.isSignedIn()) {
+          handleAuthResult(user);
+        }
+        
+        // Обработчик кнопки входа
+        document.getElementById('gSignInButton').addEventListener('click', () => {
+          auth2.signIn().then(handleAuthResult);
+        });
+      });
+    });
+  }
+
+  // Обработка результата авторизации
+  function handleAuthResult(user) {
+    const profile = user.getBasicProfile();
+    const email = profile.getEmail();
+    
+    // Проверяем, разрешен ли пользователь
+    if (ALLOWED_USERS.includes(email)) {
+      // Сохраняем токен в localStorage
+      localStorage.setItem('googleAuthToken', user.getAuthResponse().id_token);
+      
+      // Показываем основной контент
+      document.getElementById('authContainer').classList.add('hidden');
+      document.getElementById('mainContent').classList.remove('hidden');
+      
+      // Загружаем данные
+      loadEntries();
+    } else {
+      alert('Доступ запрещен. Ваш email (' + email + ') не в списке разрешенных.');
+      signOut();
+    }
+  }
+
+  // Выход из системы
+  function signOut() {
+    const auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(() => {
+      localStorage.removeItem('googleAuthToken');
+      document.getElementById('authContainer').classList.remove('hidden');
+      document.getElementById('mainContent').classList.add('hidden');
+    });
+  }
+
+  // Проверка авторизации при загрузке страницы
+  function checkAuthOnLoad() {
+    const token = localStorage.getItem('googleAuthToken');
+    
+    if (token) {
+      // Проверяем токен через Google API
+      gapi.load('auth2', function() {
+        gapi.auth2.init({
+          client_id: '328749588235-bgfeukqogpoq2ha65j7j0vk840hctiaq.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+        }).then(auth2 => {
+          auth2.currentUser.get().reloadAuthResponse().then(authResponse => {
+            const user = auth2.currentUser.get();
+            handleAuthResult(user);
+          }).catch(() => {
+            // Токен устарел - выполняем выход
+            signOut();
+          });
+        });
+      });
+    }
+  }
+
+  // Инициализация при загрузке страницы
+  window.addEventListener('DOMContentLoaded', () => {
+    initGoogleAuth();
+    checkAuthOnLoad();
+  });
+
+  // Остальной код приложения
   const API_URL = "https://script.google.com/macros/s/AKfycbxzTW0YNaqwWRVJYigldz9ABPl6ZpBDpgLBMe3BHJBzeE54vxoFduASCBWvKHhokH0eEg/exec";
 
   let allEntries = [];
@@ -572,49 +687,6 @@
   let currentPage = 1;
   let totalPages = 1;
   const cardsPerPage = 5;
-  
-  // Функция для проверки авторизации
-  function handleCredentialResponse(response) {
-    const idToken = response.credential;
-    
-    // Декодируем JWT токен
-    const payload = JSON.parse(atob(idToken.split('.')[1]));
-    const userEmail = payload.email;
-    
-    // Проверяем email пользователя
-    if (ALLOWED_USERS.includes(userEmail)) {
-      // Пользователь разрешен - показываем контент
-      document.getElementById('authContainer').style.display = 'none';
-      document.getElementById('appContent').style.display = 'block';
-      loadEntries();
-    } else {
-      // Пользователь не разрешен
-      alert(`Доступ запрещен. Ваш email (${userEmail}) не найден в списке разрешенных.`);
-      google.accounts.id.disableAutoSelect();
-    }
-  }
-  
-  // Инициализация Google Sign-In
-  function initGoogleSignIn() {
-    google.accounts.id.initialize({
-      client_id: '328749588235-bgfeukqogpoq2ha65j7j0vk840hctiaq.apps.googleusercontent.com',
-      callback: handleCredentialResponse,
-      auto_select: false
-    });
-    
-    google.accounts.id.renderButton(
-      document.getElementById("signinDiv"),
-      { 
-        theme: "outline", 
-        size: "large",
-        text: "signin_with",
-        width: "250"
-      }
-    );
-  }
-  
-  // Инициализируем вход при загрузке страницы
-  window.onload = initGoogleSignIn;
 
   async function getEntries() {
     const res = await fetch(`${API_URL}?action=getEntries`);
