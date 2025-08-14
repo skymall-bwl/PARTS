@@ -8,6 +8,88 @@
   <!-- Google Identity Script -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
+    /* Стили для шапки */
+    header {
+      background-color: #1f2937;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      user-select: none;
+      z-index: 1000;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 0;
+      transform: translateY(4px);
+    }
+
+    .site-name {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .menu-button {
+      width: 30px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 20px;
+    }
+
+    .menu-button div {
+      height: 4px;
+      background-color: white;
+      border-radius: 2px;
+    }
+
+    .dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 70px;
+      right: 15px;
+      background-color: #1f2937;
+      border: 1px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 9999;
+      min-width: 150px;
+    }
+
+    .dropdown a {
+      padding: 10px 15px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.3s;
+      user-select: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .dropdown a:hover {
+      background-color: #374151;
+    }
+
+    .icon-space {
+      margin-right: 8px;
+      width: 20px;
+      text-align: center;
+    }
+
     /* Стили для авторизации */
     #login {
       position: fixed;
@@ -32,6 +114,7 @@
     #content {
       display: none;
       width: 100%;
+      margin-top: 60px; /* Добавлено для шапки */
     }
 
     body {
@@ -522,6 +605,26 @@
   </style>
 </head>
 <body>
+<!-- Шапка -->
+<header>
+  <div class="logo"><img src="https://i.postimg.cc/wjGzSY92/1.png" alt="Logo"></div>
+  <div class="site-name">BLOCKBUSTER</div>
+  <div class="menu-button" onclick="toggleDropdown()">
+    <div></div><div></div><div></div>
+  </div>
+  <div class="dropdown" id="dropdownMenu">
+    <a href="https://bowlingblockb.github.io/PARTS/">
+      <i class="fas fa-cog icon-space"></i>ДЕТАЛИ
+    </a>
+    <a href="#">
+      <i class="fas fa-search icon-space"></i>...
+    </a>
+    <a href="#">
+      <i class="fas fa-user icon-space"></i>...
+    </a>
+  </div>
+</header>
+
 <!-- Блок авторизации -->
 <div id="login">
   <h2>Вход на сайт</h2>
@@ -569,6 +672,12 @@
 </div>
 
 <script>
+  // Функция для выпадающего меню
+  function toggleDropdown() {
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+  }
+
   // Настройки авторизации
   const allowedEmails = ["vadiksss900@gmail.com", "sergey99belov@gmail.com"];
 
