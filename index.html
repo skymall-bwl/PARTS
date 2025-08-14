@@ -8,14 +8,14 @@
   <!-- Google Identity Script -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* Стили для шапки (увеличены в 2 раза) */
+    /* Стили для шапки (измененные) */
     header {
       background-color: #1f2937;
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 40px; /* Увеличен в 2 раза */
+      padding: 25px 40px; /* Увеличенный padding */
       position: fixed;
       top: 0;
       left: 0;
@@ -23,12 +23,12 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       user-select: none;
       z-index: 1000;
-      height: 120px; /* Явно задана высота в 2 раза больше */
+      height: 100px; /* Увеличена высота */
     }
 
     .logo img {
-      width: 80px; /* Увеличен в 2 раза */
-      height: 80px; /* Увеличен в 2 раза */
+      width: 70px; /* Увеличенный размер */
+      height: 70px; /* Увеличенный размер */
       object-fit: cover;
       border-radius: 0;
       transform: translateY(4px);
@@ -37,49 +37,50 @@
     .site-name {
       flex: 1;
       text-align: center;
-      font-size: 40px; /* Увеличен в 2 раза */
+      font-size: 32px; /* Увеличенный шрифт */
       font-weight: bold;
       color: white;
     }
 
     .menu-button {
-      width: 60px; /* Увеличен в 2 раза */
+      width: 50px; /* Увеличенный размер */
       cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 48px; /* Увеличен в 2 раза */
+      height: 40px; /* Увеличенная высота */
     }
 
     .menu-button div {
-      height: 8px; /* Увеличен в 2 раза */
+      height: 6px; /* Увеличенная высота */
       background-color: white;
-      border-radius: 4px; /* Увеличен в 2 раза */
+      border-radius: 3px; /* Увеличенный радиус */
+      margin: 4px 0; /* Добавлены отступы между полосками */
     }
 
     .dropdown {
       display: none;
       flex-direction: column;
       position: absolute;
-      top: 140px; /* Скорректированная позиция */
-      right: 30px; /* Увеличен в 2 раза */
+      top: 110px; /* Смещено ниже */
+      right: 30px;
       background-color: #1f2937;
-      border: 2px solid #444; /* Увеличен в 2 раза */
-      border-radius: 16px; /* Увеличен в 2 раза */
+      border: 2px solid #444;
+      border-radius: 16px;
       overflow: hidden;
       z-index: 9999;
-      min-width: 300px; /* Увеличен в 2 раза */
+      min-width: 300px;
     }
 
     .dropdown a {
-      padding: 20px 30px; /* Увеличен в 2 раза */
+      padding: 20px 30px;
       text-decoration: none;
       color: white;
       transition: background 0.3s;
       user-select: none;
       display: flex;
       align-items: center;
-      font-size: 24px; /* Увеличен в 2 раза */
+      font-size: 24px;
     }
 
     .dropdown a:hover {
@@ -87,10 +88,10 @@
     }
 
     .icon-space {
-      margin-right: 16px; /* Увеличен в 2 раза */
-      width: 40px; /* Увеличен в 2 раза */
+      margin-right: 16px;
+      width: 40px;
       text-align: center;
-      font-size: 24px; /* Увеличен в 2 раза */
+      font-size: 24px;
     }
 
     /* Остальные стили остаются без изменений */
@@ -118,7 +119,7 @@
     #content {
       display: none;
       width: 100%;
-      margin-top: 120px; /* Увеличен в 2 раза (было 60px) */
+      margin-top: 140px; /* Увеличен отступ от шапки */
     }
 
     body {
@@ -609,7 +610,7 @@
   </style>
 </head>
 <body>
-<!-- Шапка (увеличенная в 2 раза) -->
+<!-- Шапка (измененная) -->
 <header>
   <div class="logo"><img src="https://i.postimg.cc/wjGzSY92/1.png" alt="Logo"></div>
   <div class="site-name">BLOCKBUSTER</div>
