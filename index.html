@@ -8,76 +8,78 @@
   <!-- Google Identity Script -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    /* Стили для шапки */
-header {
-  background-color: #1f2937;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 20px; /* Увеличенный padding */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  user-select: none;
-  z-index: 1000;
-  height: 60px; /* Можно явно задать высоту */
-}
+    /* Стили для шапки (увеличены в 2 раза) */
+    header {
+      background-color: #1f2937;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px; /* Увеличен в 2 раза */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      user-select: none;
+      z-index: 1000;
+      height: 120px; /* Явно задана высота в 2 раза больше */
+    }
 
-.logo img {
-  width: 50px; /* Увеличенный размер */
-  height: 50px; /* Увеличенный размер */
-  object-fit: cover;
-  border-radius: 0;
-  transform: translateY(4px);
-}
+    .logo img {
+      width: 80px; /* Увеличен в 2 раза */
+      height: 80px; /* Увеличен в 2 раза */
+      object-fit: cover;
+      border-radius: 0;
+      transform: translateY(4px);
+    }
 
-.site-name {
-  flex: 1;
-  text-align: center;
-  font-size: 24px; /* Увеличенный шрифт */
-  font-weight: bold;
-  color: white;
-}
+    .site-name {
+      flex: 1;
+      text-align: center;
+      font-size: 40px; /* Увеличен в 2 раза */
+      font-weight: bold;
+      color: white;
+    }
 
-.menu-button {
-  width: 30px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 24px; /* Увеличенная высота */
-}
+    .menu-button {
+      width: 60px; /* Увеличен в 2 раза */
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 48px; /* Увеличен в 2 раза */
+    }
 
-.menu-button div {
-  height: 4px;
-  background-color: white;
-  border-radius: 2px;
-}
+    .menu-button div {
+      height: 8px; /* Увеличен в 2 раза */
+      background-color: white;
+      border-radius: 4px; /* Увеличен в 2 раза */
+    }
 
-.dropdown {
-  display: none;
-  flex-direction: column;
-  position: absolute;
-  top: 80px; /* Скорректированная позиция */
-  right: 15px;
-  background-color: #1f2937;
-  border: 1px solid #444;
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 9999;
-  min-width: 150px;
-}
+    .dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 140px; /* Скорректированная позиция */
+      right: 30px; /* Увеличен в 2 раза */
+      background-color: #1f2937;
+      border: 2px solid #444; /* Увеличен в 2 раза */
+      border-radius: 16px; /* Увеличен в 2 раза */
+      overflow: hidden;
+      z-index: 9999;
+      min-width: 300px; /* Увеличен в 2 раза */
+    }
+
     .dropdown a {
-      padding: 10px 15px;
+      padding: 20px 30px; /* Увеличен в 2 раза */
       text-decoration: none;
       color: white;
       transition: background 0.3s;
       user-select: none;
       display: flex;
       align-items: center;
+      font-size: 24px; /* Увеличен в 2 раза */
     }
 
     .dropdown a:hover {
@@ -85,11 +87,13 @@ header {
     }
 
     .icon-space {
-      margin-right: 8px;
-      width: 20px;
+      margin-right: 16px; /* Увеличен в 2 раза */
+      width: 40px; /* Увеличен в 2 раза */
       text-align: center;
+      font-size: 24px; /* Увеличен в 2 раза */
     }
 
+    /* Остальные стили остаются без изменений */
     /* Стили для авторизации */
     #login {
       position: fixed;
@@ -114,7 +118,7 @@ header {
     #content {
       display: none;
       width: 100%;
-      margin-top: 80px; /* Добавлено для шапки */
+      margin-top: 120px; /* Увеличен в 2 раза (было 60px) */
     }
 
     body {
@@ -605,7 +609,7 @@ header {
   </style>
 </head>
 <body>
-<!-- Шапка -->
+<!-- Шапка (увеличенная в 2 раза) -->
 <header>
   <div class="logo"><img src="https://i.postimg.cc/wjGzSY92/1.png" alt="Logo"></div>
   <div class="site-name">BLOCKBUSTER</div>
