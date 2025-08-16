@@ -680,7 +680,7 @@ header {
     </div>
     
     <button id="btnSearch" class="btn-top"><i class="fas fa-search"></i> Поиск</button>
-    <button onclick="resetSearch()" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
+   <button id="btnReset" class="btn-top"><i class="fas fa-sync-alt"></i> Сбросить</button>
     <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXGtubHygKnygpEN6K2KWtrhfu4fWr0hKwuVf10JNvYjEF6VOj8wgKuSxc105wk0KE/exec', '_blank')" class="btn-top"><i class="fas fa-book"></i> Мануалы</button>
     <button onclick="window.open('https://script.google.com/macros/s/AKfycbyXq-wMGkUxPT9URLDEr55LkAPR8iQ4U90Vxfa1nVIrYXIM1ojsphTfIReNXlG1Gh4U/exec', '_blank')" class="btn-top"><i class="fas fa-plus-circle"></i> Добавить деталь</button>
   </div>
@@ -1073,7 +1073,13 @@ header {
         document.getElementById('sortSelect').value = 'all';
       }
     });
-
+document.getElementById('btnReset')?.addEventListener('click', () => {
+  currentEntries = [...allEntries];
+  updateTotalPages();
+  currentPage = 1;
+  renderPage(currentPage);
+  document.getElementById('sortSelect').value = 'all';
+});
     document.getElementById('sortSelect')?.addEventListener('change', async function() {
       showLoader(true);
       try {
