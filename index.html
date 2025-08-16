@@ -602,9 +602,43 @@ header {
       font-size: 18px;
       color: #666;
     }
+
+    /* Стили для индикатора загрузки */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      display: none;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #dc143c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+<!-- Индикатор загрузки -->
+<div class="loader-container" id="loader">
+  <div class="loader"></div>
+</div>
+
 <!-- Шапка (измененная) -->
 <header>
   <div class="logo"><img src="https://i.postimg.cc/wjGzSY92/1.png" alt="Logo"></div>
@@ -669,6 +703,11 @@ header {
 </div>
 
 <script>
+  // Функция для показа/скрытия индикатора загрузки
+  function showLoader(show) {
+    document.getElementById('loader').style.display = show ? 'flex' : 'none';
+  }
+
   // Функция для выпадающего меню
   function toggleDropdown() {
     const menu = document.getElementById("dropdownMenu");
@@ -680,14 +719,19 @@ header {
 
   // Обработчик ответа от Google
   function handleCredentialResponse(response) {
-    const data = parseJwt(response.credential);
-    const email = data.email;
+    showLoader(true);
+    try {
+      const data = parseJwt(response.credential);
+      const email = data.email;
 
-    if (allowedEmails.includes(email)) {
-      localStorage.setItem("userEmail", email);
-      location.reload();
-    } else {
-      alert("Доступ запрещён для: " + email);
+      if (allowedEmails.includes(email)) {
+        localStorage.setItem("userEmail", email);
+        location.reload();
+      } else {
+        alert("Доступ запрещён для: " + email);
+      }
+    } finally {
+      showLoader(false);
     }
   }
 
@@ -730,33 +774,63 @@ header {
 
     // Основные функции приложения
     async function getEntries() {
-      const res = await fetch(`${API_URL}?action=getEntries`);
-      return await res.json();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=getEntries`);
+        return await res.json();
+      } finally {
+        showLoader(false);
+      }
     }
 
     async function updateQuantity(partNumber, delta) {
-      const res = await fetch(`${API_URL}?action=updateQuantity&partNumber=${encodeURIComponent(partNumber)}&delta=${delta}`);
-      return await res.json();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=updateQuantity&partNumber=${encodeURIComponent(partNumber)}&delta=${delta}`);
+        return await res.json();
+      } finally {
+        showLoader(false);
+      }
     }
 
     async function deleteEntry(rowIndex) {
-      const res = await fetch(`${API_URL}?action=deleteEntry&rowIndex=${rowIndex}`);
-      return await res.json();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=deleteEntry&rowIndex=${rowIndex}`);
+        return await res.json();
+      } finally {
+        showLoader(false);
+      }
     }
 
     async function getHistory(partNumber) {
-      const res = await fetch(`${API_URL}?action=getHistory&partNumber=${encodeURIComponent(partNumber)}`);
-      return await res.text();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=getHistory&partNumber=${encodeURIComponent(partNumber)}`);
+        return await res.text();
+      } finally {
+        showLoader(false);
+      }
     }
 
     async function getPopularEntries() {
-      const res = await fetch(`${API_URL}?action=getPopularEntries`);
-      return await res.json();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=getPopularEntries`);
+        return await res.json();
+      } finally {
+        showLoader(false);
+      }
     }
 
     async function getMostPopularEntries() {
-      const res = await fetch(`${API_URL}?action=getMostPopularEntries`);
-      return await res.json();
+      showLoader(true);
+      try {
+        const res = await fetch(`${API_URL}?action=getMostPopularEntries`);
+        return await res.json();
+      } finally {
+        showLoader(false);
+      }
     }
 
     function createCard(entry) {
@@ -1001,26 +1075,31 @@ header {
     });
 
     document.getElementById('sortSelect')?.addEventListener('change', async function() {
-      if (this.value === 'all') {
-        currentEntries = [...allEntries];
-      } else if (this.value === 'popular') {
-        currentEntries = await getPopularEntries();
-        if (currentEntries && currentEntries[0]?.lastChangeDate) {
-          currentEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
+      showLoader(true);
+      try {
+        if (this.value === 'all') {
+          currentEntries = [...allEntries];
+        } else if (this.value === 'popular') {
+          currentEntries = await getPopularEntries();
+          if (currentEntries && currentEntries[0]?.lastChangeDate) {
+            currentEntries.sort((a, b) => new Date(b.lastChangeDate) - new Date(a.lastChangeDate));
+          }
+        } else if (this.value === 'mostPopular') {
+          currentEntries = await getMostPopularEntries();
+          if (!currentEntries?.length) {
+            alert('Нет данных для сортировки "всё время"');
+            return;
+          }
+        } else if (this.value === 'sortByQty') {
+          currentEntries = [...allEntries].sort((a, b) => a.quantity - b.quantity);
         }
-      } else if (this.value === 'mostPopular') {
-        currentEntries = await getMostPopularEntries();
-        if (!currentEntries?.length) {
-          alert('Нет данных для сортировки "всё время"');
-          return;
-        }
-      } else if (this.value === 'sortByQty') {
-        currentEntries = [...allEntries].sort((a, b) => a.quantity - b.quantity);
+        
+        updateTotalPages();
+        currentPage = 1;
+        renderPage(currentPage);
+      } finally {
+        showLoader(false);
       }
-      
-      updateTotalPages();
-      currentPage = 1;
-      renderPage(currentPage);
     });
 
     document.getElementById('modalClose')?.addEventListener('click', () => {
@@ -1035,10 +1114,15 @@ header {
 
     // Загрузка данных
     async function loadData() {
-      allEntries = await getEntries();
-      currentEntries = [...allEntries];
-      updateTotalPages();
-      renderPage(currentPage);
+      showLoader(true);
+      try {
+        allEntries = await getEntries();
+        currentEntries = [...allEntries];
+        updateTotalPages();
+        renderPage(currentPage);
+      } finally {
+        showLoader(false);
+      }
     }
 
     loadData();
